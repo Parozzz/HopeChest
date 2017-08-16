@@ -1,0 +1,21 @@
+## YAML Template.
+---
+name: HopeChest
+version: 0.9
+main: me.parozzz.hopechestv2.HopeChest
+commands:
+  chest:
+    aliases: [hpc,ch,assignchest]
+    usage: /chest help
+    description: Main command
+permission:
+  hopechest.mob:
+    description: Use the mob command
+    default: op
+  hopechest.crop:
+    description: Use the crop command
+    default: op
+  hopechest.admin:
+    description: Use the admin commands
+    default: op
+softdepend: [Vault]

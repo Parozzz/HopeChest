@@ -1,0 +1,53 @@
+guiTitle: '&7Convert your chest here!'  #The name of the converting gui
+GuiItem: #You can change the id of the item from the list below
+  data: 0 
+  name: '&cConverto to %crop%'
+  lore:
+    - '&7Click this to convert your chest into an HopeChest'
+    - '&7Cost for converting: %guiCost%'
+
+ContainerItem:
+  id: chest  #This will change the type of container. You can choose any block that have an inventory (chest, trapped_chest, hopper, dispenser and dropper)
+  name: '&2Crop&4Chest - &6%crop%'
+  lore:
+    - '&7This chest will gather all the loot from %crop%'
+    - '&7only if has grown in the same chunk'
+
+cactusGrowAnyway: true  #Can cactus grow even if no CropChest is in the chunk?
+cactusFarm: true #A cactus must be broken by a farm to be actually gathered?
+
+melonGrowAnyway: true  #Can melons grow even if no CropChest is in the chunk?
+pumpkinGrowAnyway: true  #Can pumpkins grow even if no CropChest is in the chunk?
+sugarCaneGrowAnyway: true  #Can sugar canes grow even if no CropChest is in the chunk?
+
+Crops:
+  ALL:
+    name: '&7All' #The display name of the mob. Will replace the %mob% placeholder
+    guiId: chest #The type of the corresponding gui item
+    convert: true #If players can convert a normal chest to this assigned type chest
+    convertCost: 3000 #This will be cost for converting a normal chest into a hope chest. Set to 0 to disable
+  CACTUS:
+    name: '&2Cactus' #The display name of the mob. Will replace the %mob% placeholder
+    guiId: cactus
+    convert: true #If players can convert a normal chest to this assigned type chest
+    convertCost: 3000 #This will be cost for converting a normal chest into a hope chest. Set to 0 to disable
+  SUGARCANE:
+    name: '&2SugarCane' #The display name of the mob. Will replace the %mob% placeholder
+    guiId: sugar_cane
+    convert: true #If players can convert a normal chest to this assigned type chest
+    convertCost: 3000 #This will be cost for converting a normal chest into a hope chest. Set to 0 to disable
+  MELON:
+    name: '&2Melon' #The display name of the mob. Will replace the %mob% placeholder
+    guiId: melon
+    convert: true #If players can convert a normal chest to this assigned type chest
+    convertCost: 3000 #This will be cost for converting a normal chest into a hope chest. Set to 0 to disable
+  PUMPKIN:
+    name: '&6Pumpkin' #The display name of the mob. Will replace the %mob% placeholder
+    guiId: pumpkin
+    convert: true #If players can convert a normal chest to this assigned type chest
+    convertCost: 3000 #This will be cost for converting a normal chest into a hope chest. Set to 0 to disable
+  CROP:
+    name: '&2Crop' #The display name of the mob. Will replace the %mob% placeholder
+    guiId: wheat
+    convert: true #If players can convert a normal chest to this assigned type chest
+    convertCost: 3000 #This will be cost for converting a normal chest into a hope chest. Set to 0 to disable

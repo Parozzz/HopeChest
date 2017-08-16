@@ -1,0 +1,30 @@
+mobChestEnabled: true
+cropChestEnabled: true
+
+antigriefEnabled: true #Only the player who placed the chest can break it
+chunkLimit: 1 #How many hopechest can be there per chunk? This will count on chest of the same type
+doubleChest: true #Can players create double chests?
+convertRenamedChest: false #Can players convert chests that are renamed?
+maxConvert: 1 #How many chests can player convert each time?
+
+Messages:
+  chunkLimit: '&cChunk limit reached!'
+  namedAlready: '&cThis chest is already been renamed and can''t be converted!'
+  itemWrong: '&cWrong item'
+  playerWrong: '&cThat player is not online!'
+  chestConvertion: '&7Converted your container into a &6HopeChest&7!'
+  chestProtected: '&4You can''t break other players chests'
+  chestDoubled: '&4Can''t place double HopeChests'
+  containerWrong: '&7You have the wrong container in your hand'
+  itemReceive: '&cYou received a &6%item% x %amount%!'
+  inventoryFull: '&cYour inventory was full! The item has been dropped on the ground'
+  noPermission: '&cNope'
+  moneyLow: '&cYou don''t have enough money to convert the chest!'
+  headSold: '&cYou sold %amount% heads for %total%'
+  #If a player don't have the permission, won't see the help command
+  listHelp: '&7/chest list - &2Get a list of name of item'
+  mobHelp: '&7/chest mob - &2Transform the container into a MobChest'
+  cropHelp: '&7/chest crop - &2Trasform the container into a CropChest'
+  giveHelp: '&7/chest give <mob/farm type> <playerName> <quantity> - &2Use * as playername for giving an item to everyone'
+  reloadHelp: '&7/chest reload - &2Reload the plugin'
+  reloaded: '&cPlugin reloaded!'
