@@ -58,7 +58,7 @@ public class HopeChest extends JavaPlugin
         chestFactory = new ChestFactory(worldRegistry, configuration);
         
         Bukkit.getPluginManager().registerEvents(new ChestListener(chestFactory, chestRegistry, worldRegistry, configuration), this);
-        Bukkit.getPluginManager().registerEvents(new MobListener(worldRegistry), this);
+        Bukkit.getPluginManager().registerEvents(new MobListener(worldRegistry, configuration), this);
         Bukkit.getPluginManager().registerEvents(new CropListener(worldRegistry), this);
         Bukkit.getPluginManager().registerEvents(new ChestGuiListener(chestFactory, configuration), this);
         
@@ -66,8 +66,8 @@ public class HopeChest extends JavaPlugin
         try {
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
-            
             commandMap = (CommandMap)commandMapField.get(Bukkit.getServer());
+            commandMapField.setAccessible(false);
         } catch(final IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException ex) {
             logger.log(Level.SEVERE, null, ex);
             return;

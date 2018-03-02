@@ -43,6 +43,10 @@ Mob:
       - "&fwill gather all drops from nearby &bmobs&f."
       - ""
       - "&7Shift + Right &fClick to configure."
+      
+  itemBlacklist:
+      - red_rose
+      
   MobNames:
     bat: "&fChicken"
     blaze: "&dBlaze"
