@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.parozzz</groupId>
-    <artifactId>HopeChest</artifactId>
-    <version>4_BETA1</version>
+    <artifactId>hopechest</artifactId>
+    <version>4.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,7 +35,7 @@
                         </execution>
                     </executions>
                 <configuration>
-                    <finalName>${project.artifactId}-${project.version}-final</finalName>
+                    <finalName>${project.artifactId}-${project.version}-SNAPSHOT</finalName>
                 </configuration>
             </plugin>
         </plugins>
@@ -117,18 +117,6 @@
             <groupId>me.parozzz.reflex</groupId>
             <artifactId>ReflexAPI</artifactId>
             <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.massivecraft.factions</groupId>
-            <artifactId>FactionsUUID</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
