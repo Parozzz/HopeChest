@@ -1,30 +1,137 @@
-mobChestEnabled: true
-cropChestEnabled: true
-
-antigriefEnabled: true #Only the player who placed the chest can break it
-chunkLimit: 1 #How many hopechest can be there per chunk? This will count on chest of the same type
-doubleChest: true #Can players create double chests?
-convertRenamedChest: false #Can players convert chests that are renamed?
-maxConvert: 1 #How many chests can player convert each time?
-
-Messages:
-  chunkLimit: '&cChunk limit reached!'
-  namedAlready: '&cThis chest is already been renamed and can''t be converted!'
-  itemWrong: '&cWrong item'
-  playerWrong: '&cThat player is not online!'
-  chestConvertion: '&7Converted your container into a &6HopeChest&7!'
-  chestProtected: '&4You can''t break other players chests'
-  chestDoubled: '&4Can''t place double HopeChests'
-  containerWrong: '&7You have the wrong container in your hand'
-  itemReceive: '&cYou received a &6%item% x %amount%!'
-  inventoryFull: '&cYour inventory was full! The item has been dropped on the ground'
-  noPermission: '&cNope'
-  moneyLow: '&cYou don''t have enough money to convert the chest!'
-  headSold: '&cYou sold %amount% heads for %total%'
-  #If a player don't have the permission, won't see the help command
-  listHelp: '&7/chest list - &2Get a list of name of item'
-  mobHelp: '&7/chest mob - &2Transform the container into a MobChest'
-  cropHelp: '&7/chest crop - &2Trasform the container into a CropChest'
-  giveHelp: '&7/chest give <mob/farm type> <playerName> <quantity> - &2Use * as playername for giving an item to everyone'
-  reloadHelp: '&7/chest reload - &2Reload the plugin'
-  reloaded: '&cPlugin reloaded!'
+Gui:
+  title: "&7&lHopeChest &0Assignment"
+  MobHead:
+    name: "{mob}"
+    lore:
+      - "&7Right Click: &fGet the token item in your inventory"
+  Crop:
+    cactus:
+      id: cactus
+    sugar_cane:
+      id: sugar_cane
+    melon:
+      id: melon
+    pumpkin:
+      id: pumpkin
+    crops:
+      id: wheat
+    cocoa:
+      id: ink_sack
+      data: 3
+    potato:
+      id: potato_item
+    carrot:
+      id: carrot_item
+    nether_warts:
+      id: nether_stalk
+    beetroot_block:
+      id: beetroot
+      
+TokenItem:
+  id: paper
+  name: "{chest} &7Token"
+  lore:
+    - "&7Shift + Right Click &fon a {chest}"
+    - "&7To add {type} to it!"
+    
+Mob:
+  ChestItem:
+    id: chest #This must be a valid container. If is not, the plugin won't start.
+    name: "&bMob&fChest"
+    lore:
+      - "&fA special chest that contains some teleport powers,"
+      - "&fwill gather all drops from nearby &bmobs&f."
+      - ""
+      - "&7Shift + Right &fClick to configure."
+  MobNames:
+    bat: "&fChicken"
+    blaze: "&dBlaze"
+    spider: "&aSpider"
+    cave_spider: "&aCave Spider"
+    chicken: "&fChicken"
+    cow: "&fCow"
+    mushroom_cow: "&dMushroom &fCow"
+    creeper: "&2Creeper"
+    enderman: "&5Enderman"
+    endermite: "&5Endermite"
+    ghast: "&fGhast"
+    guardian: "&3Guardian"
+    elder_guardian: "&3Elder Guardian"
+    horse: "&7Horse"
+    skeleton_horse: "&7Skeleton Horse"
+    zombie_horse: "&7Zombie Horse"
+    mule: "&7Mule"
+    donkey: "&7Donkey"
+    llama: "&7Llama"
+    iron_golem: "&8Iron Golem"
+    snowman: "&7SnowMan"
+    ocelot: "&7Ozelot"
+    parrot: "&7Parrot"
+    pig: "&5Pig"
+    polar_bear: "&fPolar Bear"
+    rabbit: "&fRabbit"
+    sheep: "&fSheep"
+    shulker: "&dShulker"
+    silverfish: "&7Silverfish"
+    skeleton: "&7Skeleton"
+    wither_skeleton: "&0Wither Skeleton"
+    stray: "&7Stray"
+    slime: "&aSlime"
+    magma_cube: "&4Magma Cube"
+    squid: "&1Squid"
+    villager: "&fVillager"
+    vindicator: "&eVindicator"
+    evoker: "&eEvoker"
+    illusioner: "&eIllusioner"
+    vex: "&eVex"
+    witch: "&dWitch"
+    wolf: "&7Wolf"
+    zombie: "&aZombie"
+    zombie_villager: "&aZombie Villager"
+    pig_zombie: "&5Pig Zombie"
+    giant: "&2Giant"
+    husk: "&2Husk"
+    wither: "&0Wither"
+    ender_dragon: "&dEnder Dragon"
+  
+Crop:
+  ChestItem:
+    id: chest #This must be a valid container. If is not, the plugin won't start.
+    name: "&bCrop&fChest"
+    lore:
+      - "&fA special chest that contains some teleport powers,"
+      - "&fwill gather all drops from &2growing crops&f."
+      - ""
+      - "&7Shift + Right &fClick to configure."
+  CropNames:
+    cactus: "&2Cactus"
+    sugar_cane: "&2SugarCane"
+    melon: "&2Melons"
+    pumpkin: "&ePumpkins"
+    crops: "&eWheat"
+    cocoa: "&7Cocoa Beans"
+    potato: "&2Potato"
+    carrot: "&2Carrot"
+    nether_warts: "&4Nether &cWarts"
+    beetroot_block: "&cBeetroot"
+      
+Language: #Leave the message empty (Set it "") or remove it for not have the message to be sent.
+  command_getchest: "&7/hchest getchest <type> <subType1> <subType2> ... &f- Get an empty &7&lHopeChest&f. &2&lAdmin Command."
+  command_givechest: "&7/hchest givechest <player> <type> <subType1> <subType2> ... &f- Give an empty &7&lHopeChest &fto a player. &2&lAdmin Command."
+  command_gettoken: "&7/hchest gettoken <type> <subType> &f- Get a chest token. &2&lAdmin Command."
+  command_givetoken: "&7/hchest givetoken <player> <type> <subType> &f- Give a chest token to a player. &2&lAdmin Command."
+  command_wrong: "&7There is not such command as {command}. Use &f/hchest help &7for info."
+  command_error: "&4Something went wrong while executing the command."
+  wrong_subtype: "&cThe subType {type} is wrong."
+  wrong_token_type: "&cThis token is of wrong type. It is assigned to {chest}&c."
+  token_subtype_already_exist: "&cThat chest already have the subType of this token."
+  player_offline: "&2{player} &cis offline."
+  no_permission: "&cYou don't have the permission to do that."
+  no_such_chesttype: "&cA chest type named &4&l{name} &cdoes not exists."
+  item_sent: "&fYou sent {item} &fto &2{player}&f."
+  item_received: "&fYou received {item}&f."
+  inventory_full: "&fYour inventory was full. The received item is being dropped on the ground."
+  chest_placed: "&fYou have placed a {chest}&f."
+  chest_destroyed: "&cYou have destroyed a {chest}&f"
+  cropchest: "&2Crop&7Chest"
+  mobchest: "&bMob&7Chest"
