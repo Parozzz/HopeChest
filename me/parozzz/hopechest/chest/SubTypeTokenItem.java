@@ -6,9 +6,7 @@
 package me.parozzz.hopechest.chest;
 
 import javax.annotation.Nullable;
-import me.parozzz.hopechest.chest.crop.CropChest;
 import me.parozzz.hopechest.chest.crop.CropType;
-import me.parozzz.hopechest.chest.mob.MobChest;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.configuration.chest.CropConfig;
 import me.parozzz.hopechest.configuration.chest.MobConfig;

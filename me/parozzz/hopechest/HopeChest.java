@@ -11,8 +11,10 @@ import java.util.logging.Logger;
 import me.parozzz.hopechest.api.HopeChestAPI;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestListener;
+import me.parozzz.hopechest.chest.SubTypeTokenItem;
 import me.parozzz.hopechest.world.ChestRegistry;
 import me.parozzz.hopechest.chest.crop.CropListener;
+import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.hopechest.chest.gui.ChestGui;
 import me.parozzz.hopechest.chest.gui.ChestGuiListener;
 import me.parozzz.hopechest.chest.mob.MobListener;
@@ -21,6 +23,7 @@ import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.utilities.PlayerUtil;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.WorldRegistry;
+import me.parozzz.reflex.utilities.EntityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandMap;
@@ -124,6 +127,18 @@ public class HopeChest extends JavaPlugin
             public AbstractChest getChestAt(final Location loc) 
             {
                 return hopeChest.getWorldRegistry().getWorldManager(loc.getWorld()).getChestAt(loc);
+            }
+
+            @Override
+            public SubTypeTokenItem getToken(EntityUtil.CreatureType ct)
+            {
+                return new SubTypeTokenItem(ct, hopeChest.getConfiguration());
+            }
+
+            @Override
+            public SubTypeTokenItem getToken(CropType ct) 
+            {
+                return new SubTypeTokenItem(ct, hopeChest.getConfiguration());
             }
         });        
     }

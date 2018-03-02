@@ -51,7 +51,7 @@ public class WorldManager
         return world;
     }
     
-    protected final AbstractChest addChest(final ChestType chestType, final BlockState blockState, final Object... initialSubTypes)
+    protected final @Nullable AbstractChest addChest(final ChestType chestType, final BlockState blockState, final Object... initialSubTypes)
     {
         if(chestType == null || chestType.getChestClass() == null || !InventoryHolder.class.isInstance(blockState))
         {
@@ -141,13 +141,9 @@ public class WorldManager
     
     public final @Nullable TypeContainer getByChunk(final Chunk c)
     {
-        if(c == null)
-        {
-            return null;
-        }
-        
-        TypeContainer typeContainer = chunkContainers.get(c);
-        return typeContainer;
+        return c == null 
+                ? null 
+                : chunkContainers.get(c);
     }
     
     public final void unloadChunk(final Chunk c)
