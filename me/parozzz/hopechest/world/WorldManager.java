@@ -20,7 +20,6 @@ import org.bukkit.World;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.hopechest.database.DatabaseManager;
-import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -153,19 +152,31 @@ public class WorldManager
     
     public final void unloadChunk(final Chunk c)
     {
-        chunkContainers.remove(c);
+        TypeContainer container = chunkContainers.remove(c);
+        if(container != null)
+        {
+            container.forEach(chestRegistry::removePlacedChest);
+        }
     }
 
     public final void loadChunk(final Chunk c)
     {
-        TypeContainer typeContainer = new TypeContainer(c);
         databaseManager.getChestTable().queryChunk(c, query -> 
         {
-            ChestType type = query.getType();
-            
-            AbstractChest chest = this.getChest(type, query.getLocation());
-            query.subTypeStream().map(type::convertString).forEach(chest::addSpecificType);
-            typeContainer.addChest(chest);
+            if(!query.isEmpty())
+            {
+                TypeContainer typeContainer = chunkContainers.computeIfAbsent(c, TypeContainer::new);
+                query.forEach(queryItem -> 
+                {
+                    ChestType type = queryItem.getType();
+
+                    AbstractChest chest = this.getChest(type, queryItem.getLocation());
+                    queryItem.subTypeStream().map(type::convertString).forEach(chest::addRawSpecificType);
+
+                    chestRegistry.addPlacedChest(chest);
+                    typeContainer.addChest(chest);
+                });
+            }
         });
     }
     

@@ -46,7 +46,6 @@ public final class HopeChestConfiguration
     public final void reLoad()
     {
         hopeChest.reloadConfig();
-        chestConfigs.clear();
         load();
     }
     

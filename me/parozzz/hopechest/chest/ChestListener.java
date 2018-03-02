@@ -5,8 +5,7 @@
  */
 package me.parozzz.hopechest.chest;
 
-import me.parozzz.hopechest.chest.crop.CropChest;
-import me.parozzz.hopechest.chest.mob.MobChest;
+import me.parozzz.hopechest.HopeChest;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.ChestRegistry;
@@ -14,6 +13,7 @@ import me.parozzz.hopechest.world.WorldManager;
 import me.parozzz.hopechest.world.WorldRegistry;
 import me.parozzz.reflex.language.LanguageManager;
 import me.parozzz.reflex.utilities.ItemUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

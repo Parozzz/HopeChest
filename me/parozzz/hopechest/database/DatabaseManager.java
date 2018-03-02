@@ -18,10 +18,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class DatabaseManager 
 {
+    private final JavaPlugin plugin;
+    
     private final HikariDataSource source;
     private final ChestTable chestTable;
     public DatabaseManager(final JavaPlugin plugin)
     {
+        this.plugin = plugin;
+        
         HikariConfig config = new HikariConfig();
         config.setConnectionTestQuery("SELECT 1;");
         config.setPoolName("HopeChestSQlitePool");
@@ -32,6 +36,11 @@ public class DatabaseManager
         source = new HikariDataSource(config);
         
         chestTable = new ChestTable(this);
+    }
+    
+    protected JavaPlugin getPlugin()
+    {
+        return plugin;
     }
     
     protected synchronized Connection getConnection() throws SQLException

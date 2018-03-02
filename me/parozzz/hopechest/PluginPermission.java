@@ -13,16 +13,15 @@ import org.bukkit.command.CommandSender;
  */
 public enum PluginPermission 
 {
-    COMMAND_GETCHEST("hopechest.command" , "getchest"),
-    COMMAND_GIVECHEST("hopechest.command", "givechest"),
-    COMMAND_GETTOKEN("hopechest.command", "gettoken"),
-    COMMAND_GIVETOKEN("hopechest.command", "givetoken");
+    COMMAND_GETCHEST("hopechest.command.getchest"),
+    COMMAND_GIVECHEST("hopechest.command.givechest"),
+    COMMAND_GETTOKEN("hopechest.command.gettoken"),
+    COMMAND_GIVETOKEN("hopechest.command.givetoken"),
+    COMMAND_RELOAD("hopechest.command.reload");
         
-    private final String subSection;
     private final String perm;
-    private PluginPermission(final String subSection, final String perm)
+    private PluginPermission(final String perm)
     {
-        this.subSection = subSection;
         this.perm = perm;
     }
 
@@ -33,6 +32,6 @@ public enum PluginPermission
             return false;
         }
         
-        return cs.hasPermission(subSection+".*") || cs.hasPermission(subSection+perm);
+        return cs.hasPermission(perm);
     }
 }

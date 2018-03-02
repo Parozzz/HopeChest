@@ -28,6 +28,11 @@ public class ChestRegistry
         return placedChests.containsKey(loc);
     }
     
+    protected AbstractChest removePlacedChest(final AbstractChest chest)
+    {
+        return placedChests.remove(chest.getLocation());
+    }
+    
     protected AbstractChest removePlacedChestAt(final Location loc)
     {
         return placedChests.remove(loc);

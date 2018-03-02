@@ -5,9 +5,12 @@
  */
 package me.parozzz.hopechest;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import me.parozzz.hopechest.chest.ChestType;
@@ -29,14 +32,18 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Paros
  */
-public class HChestCommand extends Command
+public final class HChestCommand extends Command
 {
+    private static final Logger logger = Logger.getLogger(HChestCommand.class.getName());
+    
     private final HopeChestConfiguration config;
     private final ChestFactory chestFactory;
     private final Map<String, SubCommand> subCommandMap;
     public HChestCommand(final HopeChestConfiguration config, final ChestFactory chestFactory, final DatabaseManager database)
     {
         super("hchest");
+        
+        this.setAliases(Arrays.asList("hpc", "ch", "assignchest"));
         
         this.config = config;
         this.chestFactory = chestFactory;
@@ -100,6 +107,17 @@ public class HChestCommand extends Command
             }
             
             subCommandMap.get("gettoken").executeConsumer(cs, Stream.of(val).skip(1).toArray(String[]::new));
+        }));
+        
+        subCommandMap.put("reload", new SubCommand(PluginPermission.COMMAND_RELOAD, "command_reload", 0).setGeneralConsumer((cs, val) -> 
+        {
+            try {
+                config.reLoad();
+                config.getLanguage().sendMessage(cs, "configuration_reloaded");
+            } catch(final Exception ex) {
+                logger.log(Level.SEVERE, "Error during reloading the configuration", ex);
+                config.getLanguage().sendMessage(cs, "configuration_reload_error");
+            }
         }));
     }
     

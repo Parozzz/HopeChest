@@ -1,10 +1,11 @@
 name: HopeChest
 version: 4.0
+description: Create chest that gather stuff!
+author: Parozzz
+website: https://github.com/Parozzz/HopeItems
+
+load: STARTUP
 main: me.parozzz.hopechest.HopeChest
-commands:
-  chest:
-    aliases: [hpc,ch,assignchest]
-    usage: /chest help
-    description: Main command
+
 depend: [ReflexAPI]
 softdepend: [Vault, Multiverse-Core]

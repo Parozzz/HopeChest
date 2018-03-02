@@ -32,7 +32,7 @@ TokenItem:
   name: "{chest} &7Token"
   lore:
     - "&7Shift + Right Click &fon a {chest}"
-    - "&7To add {type} to it!"
+    - "&7To add {type} &7to it!"
     
 Mob:
   ChestItem:
@@ -116,12 +116,15 @@ Crop:
     beetroot_block: "&cBeetroot"
       
 Language: #Leave the message empty (Set it "") or remove it for not have the message to be sent.
-  command_getchest: "&7/hchest getchest <type> <subType1> <subType2> ... &f- Get an empty &7&lHopeChest&f. &2&lAdmin Command."
-  command_givechest: "&7/hchest givechest <player> <type> <subType1> <subType2> ... &f- Give an empty &7&lHopeChest &fto a player. &2&lAdmin Command."
-  command_gettoken: "&7/hchest gettoken <type> <subType> &f- Get a chest token. &2&lAdmin Command."
-  command_givetoken: "&7/hchest givetoken <player> <type> <subType> &f- Give a chest token to a player. &2&lAdmin Command."
+  command_getchest: "&7/hchest getchest <type> <subType1> <subType2> ... &2- Get an empty &7&lHopeChest&f."
+  command_givechest: "&7/hchest givechest <player> <type> <subType1> <subType2> ... &2- Give an empty &7&lHopeChest &2to a player."
+  command_gettoken: "&7/hchest gettoken <type> <subType> &2- Get a chest token."
+  command_givetoken: "&7/hchest givetoken <player> <type> <subType> &2- Give a chest token to a player."
+  command_reload: "&7/hchest reload &2- Reload the configuration."
   command_wrong: "&7There is not such command as {command}. Use &f/hchest help &7for info."
   command_error: "&4Something went wrong while executing the command."
+  configuration_reloaded: "&2You have succesfully reloaded the configuration."
+  configuration_reload_error: "&cSomething went wrong while reloading the configuration."
   wrong_subtype: "&cThe subType {type} is wrong."
   wrong_token_type: "&cThis token is of wrong type. It is assigned to {chest}&c."
   token_subtype_already_exist: "&cThat chest already have the subType of this token."

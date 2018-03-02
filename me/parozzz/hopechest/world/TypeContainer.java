@@ -11,6 +11,7 @@ import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
@@ -35,12 +36,9 @@ public class TypeContainer
     
     protected boolean addChest(final AbstractChest chest)
     {
-        if(chest == null)
-        {
-            return false;
-        }
-        
-        return map.computeIfAbsent(chest.getType(), temp -> new LinkedList<>()).add(chest);
+        return chest == null 
+                ? false 
+                : map.computeIfAbsent(chest.getType(), temp -> new LinkedList<>()).add(chest);
     }
     
     protected boolean removeChest(final AbstractChest chest)
@@ -117,6 +115,11 @@ public class TypeContainer
         {
             itemList.clear();
         }
+    }
+    
+    public void forEach(final Consumer<AbstractChest> consumer)
+    {
+        map.values().stream().flatMap(List::stream).forEach(consumer);
     }
     
     public Chunk getChunk()

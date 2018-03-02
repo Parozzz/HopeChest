@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
-import me.parozzz.hopechest.chest.crop.CropChest;
-import me.parozzz.reflex.utilities.TaskUtil;
+import me.parozzz.hopechest.database.query.ChestQueryResult;
+import me.parozzz.hopechest.database.query.QueryItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -59,7 +59,7 @@ public class ChestTable
         String type = chest.getType().name();
         String subTypes = ((Stream<String>)chest.getSpecificTypes().stream().map(Objects::toString)).collect(Collectors.joining(","));
         
-        TaskUtil.scheduleAsync(() -> 
+        Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
             try(Connection con = databaseManager.getConnection()) {
                 PreparedStatement prepared = con.prepareStatement(ADD_CHEST);
@@ -89,7 +89,7 @@ public class ChestTable
         int z = loc.getBlockZ();
         
         String subTypes = ((Stream<String>)chest.getSpecificTypes().stream().map(Objects::toString)).collect(Collectors.joining(","));
-        TaskUtil.scheduleAsync(() -> 
+        Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
             try(Connection con = databaseManager.getConnection()) {
                 PreparedStatement prepared = con.prepareStatement(UPDATE_SUBTYPES);
@@ -116,7 +116,7 @@ public class ChestTable
         int z = loc.getBlockZ();
         String type = chest.getType().name();
         
-        TaskUtil.scheduleAsync(() -> 
+        Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
             try(Connection con = databaseManager.getConnection()) {
                 PreparedStatement prepared = con.prepareStatement(REMOVE_CHEST);
@@ -133,7 +133,7 @@ public class ChestTable
     }
     
     private final String CHUNK_QUERY = "SELECT * FROM chests WHERE world = ? AND chunkX = ? AND chunkZ = ?;";
-    public void queryChunk(final Chunk chunk, final Consumer<ChestQuery> consumer)
+    public void queryChunk(final Chunk chunk, final Consumer<ChestQueryResult> consumer)
     {
         World world = chunk.getWorld();
         
@@ -141,15 +141,15 @@ public class ChestTable
         int x = chunk.getX();
         int z = chunk.getZ();
         
-        TaskUtil.scheduleAsync(() -> 
+        Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
             try (Connection con = databaseManager.getConnection()) {
                 PreparedStatement prepared = con.prepareStatement(CHUNK_QUERY);
                 prepared.setString(1, stringWorld);
                 prepared.setInt(2, x);
                 prepared.setInt(3, z);
-                
-                List<ChestQuery> queryList = new LinkedList<>();
+                 
+                ChestQueryResult queryResult = new ChestQueryResult(world);
                 
                 ResultSet set = prepared.executeQuery();
                 while(set.next())
@@ -160,61 +160,15 @@ public class ChestTable
                     ChestType chestType = ChestType.valueOf(set.getString("type"));
                     String subTypes = set.getString("subTypes");
                     
-                    queryList.add(new ChestQuery(qx, qy, qz, chestType, subTypes));
+                    
+                    queryResult.addItem(new QueryItem(qx, qy, qz, chestType, subTypes));
                 }
                 
                             
-                TaskUtil.scheduleSync(() -> 
-                {
-                    queryList.forEach(query -> 
-                    {
-                        query.loadLocation(world);
-                        consumer.accept(query);
-                    });
-                });
-                
+                Bukkit.getScheduler().runTask(databaseManager.getPlugin(), () -> consumer.accept(queryResult));
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, null, ex);
             } 
         });
-    }
-    
-    public final class ChestQuery
-    {
-        private final int x;
-        private final int y;
-        private final int z;
-        private final ChestType chestType;
-        private final String subTypes;
-        private ChestQuery(final int x, final int y, final int z, final ChestType chestType, final String subTypes)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            
-            this.chestType = chestType;
-            this.subTypes = subTypes;
-        }
-        
-        private Location loc;
-        private void loadLocation(final World world)
-        {
-            loc = new Location(world, x, y, z);
-        }
-        
-        public Location getLocation()
-        {
-            return loc;
-        }
-        
-        public ChestType getType()
-        {
-            return chestType;
-        }
-        
-        public Stream<String> subTypeStream()
-        {
-            return Stream.of(subTypes.split(","));
-        }
     }
 }
