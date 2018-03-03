@@ -5,9 +5,13 @@
  */
 package me.parozzz.hopechest;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,15 +22,23 @@ import me.parozzz.hopechest.chest.SubTypeTokenItem;
 import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
+import me.parozzz.hopechest.database.query.IQueryResult;
 import me.parozzz.hopechest.utilities.PlayerUtil;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
-import me.parozzz.reflex.utilities.ItemUtil;
+import me.parozzz.reflex.utilities.TaskUtil;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -38,6 +50,7 @@ public final class HChestCommand extends Command
     
     private final HopeChestConfiguration config;
     private final ChestFactory chestFactory;
+    private final DatabaseManager database;
     private final Map<String, SubCommand> subCommandMap;
     public HChestCommand(final HopeChestConfiguration config, final ChestFactory chestFactory, final DatabaseManager database)
     {
@@ -47,6 +60,7 @@ public final class HChestCommand extends Command
         
         this.config = config;
         this.chestFactory = chestFactory;
+        this.database = database;
         
         subCommandMap = new HashMap<>();
         subCommandMap.put("getchest", new SubCommand(PluginPermission.COMMAND_GETCHEST, "command_getchest", 1).setPlayerConsumer((p, val) -> 
@@ -109,6 +123,35 @@ public final class HChestCommand extends Command
             subCommandMap.get("gettoken").executeConsumer(cs, Stream.of(val).skip(1).toArray(String[]::new));
         }));
         
+        subCommandMap.put("playerchest", new SubCommand(PluginPermission.COMMAND_PLAYERCHEST, "command_playerchest", 1).setGeneralConsumer((cs, val) ->
+        {
+            Player toFetch = Bukkit.getPlayer(val[0]);
+            if(toFetch != null)
+            {
+                this.sendClickableMessage(cs, toFetch.getUniqueId());
+                return;
+            }
+
+            database.getPlayerTable().getPlayerUUID(val[0], true, uuid -> sendClickableMessage(cs, uuid));
+            /*
+            TaskUtil.scheduleAsync(() -> 
+            {
+                try {
+                    String jsonString = IOUtils.toString(new URL("https://api.mojang.com/users/profiles/minecraft/" + val[0]));
+                    if(!jsonString.isEmpty())
+                    {
+                        JSONObject uuidObject = (JSONObject)JSONValue.parseWithException(jsonString); 
+                        
+                        String uuidMojang = uuidObject.get("id").toString();
+                        Bukkit.getLogger().info("UUID: " + uuidMojang);
+                        this.sendClickableMessage(cs, uuidMojang);
+                    }
+                }  catch (IOException | ParseException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
+            });*/
+        }));
+        
         subCommandMap.put("reload", new SubCommand(PluginPermission.COMMAND_RELOAD, "command_reload", 0).setGeneralConsumer((cs, val) -> 
         {
             try {
@@ -119,6 +162,35 @@ public final class HChestCommand extends Command
                 config.getLanguage().sendMessage(cs, "configuration_reload_error");
             }
         }));
+    }
+    
+    private void sendClickableMessage(final CommandSender cs, final UUID uuid)
+    {
+        database.getChestTable().queryUUID(uuid, result -> 
+        {
+            if(result.isEmpty())
+            {
+                return;
+            }
+
+            result.forEach(item -> 
+            {
+                Location loc = item.getLocation();
+                
+                String clickableString = config.getLanguage().getPlaceholder("clickable_playerchest_message")
+                        .parsePlaceholder("{x}", "" + loc.getBlockX())
+                        .parsePlaceholder("{y}", "" + loc.getBlockY())
+                        .parsePlaceholder("{z}", "" + loc.getBlockZ())
+                        .parsePlaceholder("{world}", "" + loc.getWorld().getName()).getMessage();
+                if(clickableString == null || clickableString.isEmpty())
+                {
+                    return;
+                }
+                
+                String command = "/hchestteleport " + loc.getWorld().getName() + " " +  loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
+                cs.spigot().sendMessage(new ComponentBuilder(clickableString).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)).create());
+            });
+        });
     }
     
     private @Nullable ItemStack getChestWithSubTypes(final CommandSender cs, final Player player, final ChestType chestType, final String[] array)

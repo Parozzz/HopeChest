@@ -8,6 +8,7 @@ package me.parozzz.hopechest.chest.mob;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
@@ -26,9 +27,9 @@ public class MobChest extends AbstractChest<CreatureType>
 {
     private final Set<CreatureType> types;
     
-    public MobChest(final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
+    public MobChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
     {
-        super(worldManager, loc, databaseManager);
+        super(owner, worldManager, loc, databaseManager);
         types = EnumSet.noneOf(CreatureType.class);
     }
     

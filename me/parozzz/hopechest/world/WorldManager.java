@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -51,7 +52,7 @@ public class WorldManager
         return world;
     }
     
-    protected final @Nullable AbstractChest addChest(final ChestType chestType, final BlockState blockState, final Object... initialSubTypes)
+    protected final @Nullable AbstractChest addChest(final UUID owner, final ChestType chestType, final BlockState blockState, final Object... initialSubTypes)
     {
         if(chestType == null || chestType.getChestClass() == null || !InventoryHolder.class.isInstance(blockState))
         {
@@ -65,7 +66,7 @@ public class WorldManager
             return null;
         }
         
-        AbstractChest chest = this.getChest(chestType, loc);
+        AbstractChest chest = this.getChest(owner, chestType, loc);
         Stream.of(initialSubTypes).forEach(chest::addRawSpecificType);
         
         chestRegistry.addPlacedChest(chest);
@@ -75,16 +76,16 @@ public class WorldManager
     }
     
     private final Map<ChestType, Constructor<? extends AbstractChest>> cachedConstructor = new EnumMap(ChestType.class);
-    private @Nullable AbstractChest getChest(final ChestType chestType, final Location loc)
+    private @Nullable AbstractChest getChest(final UUID owner, final ChestType chestType, final Location loc)
     {
         try {
             Constructor<? extends AbstractChest> cons = cachedConstructor.get(chestType);
             if(cons == null)
             {
-                cons = chestType.getChestClass().getConstructor(WorldManager.class, Location.class, DatabaseManager.class);
+                cons = chestType.getChestClass().getConstructor(UUID.class, WorldManager.class, Location.class, DatabaseManager.class);
                 cachedConstructor.put(chestType, cons);
             }
-            return cons.newInstance(this, loc, databaseManager);
+            return cons.newInstance(owner, this, loc, databaseManager);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             logger.log(Level.SEVERE, null, ex);
             return null;
@@ -166,7 +167,7 @@ public class WorldManager
                 {
                     ChestType type = queryItem.getType();
 
-                    AbstractChest chest = this.getChest(type, queryItem.getLocation());
+                    AbstractChest chest = this.getChest(queryItem.getOwner(), type, queryItem.getLocation());
                     queryItem.subTypeStream().map(type::convertString).forEach(chest::addRawSpecificType);
 
                     chestRegistry.addPlacedChest(chest);

@@ -50,7 +50,7 @@ public class ChestListener implements Listener
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private void onBlockPlace(final BlockPlaceEvent e)
     {
-        AbstractChest newChest = chestFactory.createNewChest(e.getItemInHand(), e.getBlockPlaced().getState());
+        AbstractChest newChest = chestFactory.createNewChest(e.getItemInHand(), e.getBlockPlaced().getState(), e.getPlayer());
         if(newChest != null)
         {
             LanguageManager language = config.getLanguage();

@@ -24,8 +24,10 @@ import me.parozzz.hopechest.utilities.PlayerUtil;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.WorldRegistry;
 import me.parozzz.reflex.utilities.EntityUtil;
+import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -112,7 +114,6 @@ public class HopeChest extends JavaPlugin
             logger.warning("Another plugin is trying to access before loading.");
             logger.warning("Have you added it to the Depend/SoftDepend list in the plugin.yml?");
             return null;
-            
         }
         
         return api != null ? api : (api = new HopeChestAPI()
@@ -130,7 +131,7 @@ public class HopeChest extends JavaPlugin
             }
 
             @Override
-            public SubTypeTokenItem getToken(EntityUtil.CreatureType ct)
+            public SubTypeTokenItem getToken(CreatureType ct)
             {
                 return new SubTypeTokenItem(ct, hopeChest.getConfiguration());
             }

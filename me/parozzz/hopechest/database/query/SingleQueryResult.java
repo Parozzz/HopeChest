@@ -14,32 +14,35 @@ import org.bukkit.World;
  *
  * @author Paros
  */
-public class ChestQueryResult 
+public class SingleQueryResult implements IQueryResult
 {
-    private final List<QueryItem> itemList;
     private final World world;
-    public ChestQueryResult(final World world)
+    private final List<QueryItem> queryItems;
+    public SingleQueryResult(final World world)
     {
         this.world = world;
-        itemList = new LinkedList<>();
+        queryItems = new LinkedList<>();
     }
     
-    public void addItem(final QueryItem item)
+    public void addItem(final QueryItem queryItem)
     {
-        itemList.add(item);
+        queryItems.add(queryItem);
+    }
+
+    @Override
+    public boolean isEmpty() 
+    {
+        return queryItems.isEmpty();
     }
     
-    public boolean isEmpty()
+    @Override
+    public void forEach(Consumer<QueryItem> consumer) 
     {
-        return itemList.isEmpty();
-    }
-    
-    public void forEach(final Consumer<QueryItem> consumer)
-    {
-        itemList.forEach(item -> 
+        queryItems.forEach(item -> 
         {
-            item.loadLocation(world);
+            item.setWorld(world);
             consumer.accept(item);
         });
     }
+    
 }

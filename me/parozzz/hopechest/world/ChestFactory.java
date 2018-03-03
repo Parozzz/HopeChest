@@ -20,6 +20,7 @@ import me.parozzz.reflex.NMS.itemStack.NMSStackCompound;
 import me.parozzz.reflex.NMS.nbt.NBTCompound;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -40,9 +41,10 @@ public class ChestFactory
      * Create a new crop chest with the passed blockState, which needs to implement inventory holder either
      * @param itemStack The ItemStack placed, this method already checks if the ItemStack NBT is valid.
      * @param blockState The inventoryHolder to create the new chest with.
+     * @param owner The player who placed it
      * @return The new chest if all parameters are valid, null if the chest already exists.
      */
-    public @Nullable AbstractChest createNewChest(final ItemStack itemStack, final BlockState blockState)
+    public @Nullable AbstractChest createNewChest(final ItemStack itemStack, final BlockState blockState, final Player owner)
     {
         if(itemStack == null || blockState == null)
         {
@@ -68,7 +70,7 @@ public class ChestFactory
                 ? Stream.of(subTypeString.split(",")).map(chestType::convertString).toArray(Object[]::new)
                 : new Object[0];
 
-        return worldRegistry.getWorldManager(blockState.getWorld()).addChest(chestType, blockState, subTypes);
+        return worldRegistry.getWorldManager(blockState.getWorld()).addChest(owner.getUniqueId(), chestType, blockState, subTypes);
     }
     
     private static final String CHEST_NBT = "HopeChestNBT";

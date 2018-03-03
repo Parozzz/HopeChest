@@ -6,6 +6,7 @@
 package me.parozzz.hopechest.chest;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -32,11 +33,13 @@ public abstract class AbstractChest<T>
     
     private final WorldManager worldManager;
     private final DatabaseManager databaseManager;
+    private final UUID owner;
     private final Location location;
-    public <H extends BlockState & InventoryHolder> AbstractChest(final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
+    public <H extends BlockState & InventoryHolder> AbstractChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
     {
         this.worldManager = worldManager;
         this.databaseManager = databaseManager;
+        this.owner = owner;
         this.location = loc;
     }
     
@@ -53,6 +56,11 @@ public abstract class AbstractChest<T>
     public final Location getLocation()
     {
         return location;
+    }
+    
+    public final UUID getOwner()
+    {
+        return owner;
     }
     
     public final Inventory getInventory()

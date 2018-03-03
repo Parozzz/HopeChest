@@ -17,7 +17,8 @@ public enum PluginPermission
     COMMAND_GIVECHEST("hopechest.command.givechest"),
     COMMAND_GETTOKEN("hopechest.command.gettoken"),
     COMMAND_GIVETOKEN("hopechest.command.givetoken"),
-    COMMAND_RELOAD("hopechest.command.reload");
+    COMMAND_RELOAD("hopechest.command.reload"),
+    COMMAND_PLAYERCHEST("hopechest.command.playerchest");
         
     private final String perm;
     private PluginPermission(final String perm)

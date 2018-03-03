@@ -10,18 +10,21 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import me.parozzz.reflex.database.IDatabase;
+import me.parozzz.reflex.database.PlayerTable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
  * @author Paros
  */
-public class DatabaseManager 
+public class DatabaseManager implements IDatabase
 {
     private final JavaPlugin plugin;
     
     private final HikariDataSource source;
     private final ChestTable chestTable;
+    private final PlayerTable playerTable;
     public DatabaseManager(final JavaPlugin plugin)
     {
         this.plugin = plugin;
@@ -36,6 +39,7 @@ public class DatabaseManager
         source = new HikariDataSource(config);
         
         chestTable = new ChestTable(this);
+        playerTable = new PlayerTable(this, plugin);
     }
     
     protected JavaPlugin getPlugin()
@@ -43,9 +47,15 @@ public class DatabaseManager
         return plugin;
     }
     
-    protected synchronized Connection getConnection() throws SQLException
+    @Override
+    public synchronized Connection getConnection() throws SQLException
     {
         return source.getConnection();
+    }
+    
+    public PlayerTable getPlayerTable()
+    {
+        return playerTable;
     }
     
     public ChestTable getChestTable()

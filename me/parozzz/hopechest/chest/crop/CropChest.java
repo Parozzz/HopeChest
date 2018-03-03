@@ -8,6 +8,7 @@ package me.parozzz.hopechest.chest.crop;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
@@ -24,9 +25,9 @@ import org.bukkit.inventory.ItemStack;
 public class CropChest extends AbstractChest<CropType>
 {
     private final Set<CropType> types;
-    public CropChest(final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
+    public CropChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
     {
-        super(worldManager, loc, databaseManager);
+        super(owner, worldManager, loc, databaseManager);
         types = EnumSet.noneOf(CropType.class);
     }
     

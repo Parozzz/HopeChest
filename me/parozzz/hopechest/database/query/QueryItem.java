@@ -5,6 +5,7 @@
  */
 package me.parozzz.hopechest.database.query;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.ChestType;
 import org.bukkit.Location;
@@ -21,30 +22,37 @@ public class QueryItem
     private final int z;
     private final ChestType chestType;
     private final String subTypes;
-    public QueryItem(final int x, final int y, final int z, final ChestType chestType, final String subTypes)
+    private final UUID owner;
+    public QueryItem(final int x, final int y, final int z, final ChestType chestType, final String subTypes, final UUID owner)
     {
         this.x = x;
         this.y = y;
-        this.z = z;
+        this.z = z; 
 
         this.chestType = chestType;
         this.subTypes = subTypes;
+        this.owner = owner;
     }
 
-    private Location loc;
-    protected void loadLocation(final World world)
+    private World world;
+    protected void setWorld(final World world)
     {
-        loc = new Location(world, x, y, z);
+        this.world = world;
     }
 
     public Location getLocation()
     {
-        return loc;
+        return new Location(world, x, y, z);
     }
 
     public ChestType getType()
     {
         return chestType;
+    }
+    
+    public UUID getOwner()
+    {
+        return owner;
     }
 
     public Stream<String> subTypeStream()
