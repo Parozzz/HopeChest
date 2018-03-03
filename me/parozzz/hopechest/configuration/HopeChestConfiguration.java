@@ -50,16 +50,24 @@ public final class HopeChestConfiguration
     }
     
     private NMSStackCompound subTypeToken;
+    private boolean ownerProtection;
     private void load()
     {
         FileConfiguration config = hopeChest.getConfig();
         languageManager.loadSection(config.getConfigurationSection("Language"));
+        
+        ownerProtection = config.getBoolean("ownerProtection");
         
         guiConfig.load(config.getConfigurationSection("Gui"));
         chestConfigs.get(ChestType.MOB).load(config.getConfigurationSection("Mob"));
         chestConfigs.get(ChestType.CROP).load(config.getConfigurationSection("Crop"));
         
         subTypeToken = new NMSStackCompound(ItemUtil.getItemByPath(config.getConfigurationSection("TokenItem")));
+    }
+    
+    public boolean hasOwnerProtection()
+    {
+        return ownerProtection;
     }
     
     public NMSStackCompound getSubTypeToken()

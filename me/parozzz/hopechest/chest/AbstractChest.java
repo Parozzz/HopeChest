@@ -18,6 +18,7 @@ import me.parozzz.hopechest.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -61,6 +62,11 @@ public abstract class AbstractChest<T>
     public final UUID getOwner()
     {
         return owner;
+    }
+    
+    public final boolean isOwner(final Player player)
+    {
+        return player == null ? false : owner.equals(player.getUniqueId());
     }
     
     public final Inventory getInventory()

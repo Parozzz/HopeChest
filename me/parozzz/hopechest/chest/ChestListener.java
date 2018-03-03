@@ -83,6 +83,13 @@ public class ChestListener implements Listener
             {
                 e.setCancelled(true);
                 
+                if(config.hasOwnerProtection() && !chest.isOwner(e.getPlayer()))
+                {
+                    LanguageManager language = config.getLanguage();
+                    language.getPlaceholder("player_not_owner").parsePlaceholder("{chest}", language.getMessage(chest.getType().getLanguageKey())).sendMessage(e.getPlayer());
+                    return;
+                }
+                
                 SubTypeTokenItem tokenItem = SubTypeTokenItem.getTokenItem(e.getItem());
                 if(tokenItem == null)
                 {

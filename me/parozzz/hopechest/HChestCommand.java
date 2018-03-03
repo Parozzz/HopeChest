@@ -5,9 +5,6 @@
  */
 package me.parozzz.hopechest;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,23 +19,17 @@ import me.parozzz.hopechest.chest.SubTypeTokenItem;
 import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
-import me.parozzz.hopechest.database.query.IQueryResult;
 import me.parozzz.hopechest.utilities.PlayerUtil;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
-import me.parozzz.reflex.utilities.TaskUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -125,14 +116,16 @@ public final class HChestCommand extends Command
         
         subCommandMap.put("playerchest", new SubCommand(PluginPermission.COMMAND_PLAYERCHEST, "command_playerchest", 1).setGeneralConsumer((cs, val) ->
         {
-            Player toFetch = Bukkit.getPlayer(val[0]);
+            String name = val[0];
+            
+            Player toFetch = Bukkit.getPlayer(name);
             if(toFetch != null)
             {
-                this.sendClickableMessage(cs, toFetch.getUniqueId());
+                this.sendClickableMessage(cs, name, toFetch.getUniqueId());
                 return;
             }
 
-            database.getPlayerTable().getPlayerUUID(val[0], true, uuid -> sendClickableMessage(cs, uuid));
+            database.getPlayerTable().getPlayerUUID(val[0], true, uuid -> sendClickableMessage(cs, name, uuid));
             /*
             TaskUtil.scheduleAsync(() -> 
             {
@@ -164,12 +157,13 @@ public final class HChestCommand extends Command
         }));
     }
     
-    private void sendClickableMessage(final CommandSender cs, final UUID uuid)
+    private void sendClickableMessage(final CommandSender cs, final String name, final UUID uuid)
     {
         database.getChestTable().queryUUID(uuid, result -> 
         {
             if(result.isEmpty())
             {
+                config.getLanguage().getPlaceholder("no_playerchest_found").parsePlaceholder("{player}", name).sendMessage(cs);
                 return;
             }
 

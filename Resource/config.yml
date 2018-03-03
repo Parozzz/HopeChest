@@ -1,3 +1,4 @@
+ownerProtection: true
 Gui:
   title: "&7&lHopeChest &0Assignment"
   MobHead:
@@ -132,8 +133,10 @@ Language: #Leave the message empty (Set it "") or remove it for not have the mes
   configuration_reload_error: "&cSomething went wrong while reloading the configuration."
   wrong_subtype: "&cThe subType {type} is wrong."
   wrong_token_type: "&cThis token is of wrong type. It is assigned to {chest}&c."
-  clickable_playerchest_message: "&7X:{x} Y:{y} Z:{z} World:{world}"
+  no_playerchest_found: "&2{player} &fhas not placed HopeChest."
+  clickable_playerchest_message: "&fX:&l{x} &fY:&l{y} &fZ:&l{z} &fWorld:&l{world} &0(&7ClickMe!&0)"
   token_subtype_already_exist: "&cThat chest already have the subType of this token."
+  player_not_owner: "&cYou are not the owner of this {chest}&c."
   player_offline: "&2{player} &cis offline."
   no_permission: "&cYou don't have the permission to do that."
   no_such_chesttype: "&cA chest type named &4&l{name} &cdoes not exists."
