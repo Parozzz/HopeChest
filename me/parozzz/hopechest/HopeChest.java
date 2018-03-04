@@ -53,6 +53,11 @@ public class HopeChest extends JavaPlugin
         ChestGui.setConfiguration(configuration);
         PlayerUtil.setConfig(configuration);
         
+        if(this.getConfig().getBoolean("metrics", true))
+        {
+            new MetricsLite(this);
+        }
+        
         DatabaseManager databaseManager = new DatabaseManager(this);
         worldRegistry = new WorldRegistry(this, databaseManager);
         
