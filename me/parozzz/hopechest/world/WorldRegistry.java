@@ -30,6 +30,6 @@ public class WorldRegistry
     
     public WorldManager getWorldManager(final World world)
     {
-        return worldManagers.computeIfAbsent(world, w -> new WorldManager(hopeChest.getChestRegistry(), hopeChest.getChestFactory(), databaseManager, w));
+        return worldManagers.computeIfAbsent(world, w -> new WorldManager(hopeChest.getChestRegistry(), hopeChest.getChestFactory(), databaseManager,  hopeChest.getConfiguration(), w));
     }
 }

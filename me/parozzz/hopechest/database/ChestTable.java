@@ -9,10 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -22,7 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
-import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.database.query.IQueryResult;
 import me.parozzz.hopechest.database.query.QueryItem;
 import me.parozzz.hopechest.database.query.MultipleQueryResult;
@@ -68,8 +63,7 @@ public class ChestTable
         
         Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
-            try(Connection con = databaseManager.getConnection()) {
-                PreparedStatement prepared = con.prepareStatement(ADD_CHEST);
+            try(Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(ADD_CHEST)) {
                 prepared.setString(1, world);
                 prepared.setInt(2, x);
                 prepared.setInt(3, y);
@@ -99,8 +93,7 @@ public class ChestTable
         String subTypes = ((Stream<String>)chest.getSpecificTypes().stream().map(Objects::toString)).collect(Collectors.joining(","));
         Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
-            try(Connection con = databaseManager.getConnection()) {
-                PreparedStatement prepared = con.prepareStatement(UPDATE_SUBTYPES);
+            try(Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(UPDATE_SUBTYPES)) {
                 prepared.setString(1, subTypes);
                 prepared.setString(2, world);
                 prepared.setInt(3, x);
@@ -126,8 +119,7 @@ public class ChestTable
         
         Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
-            try(Connection con = databaseManager.getConnection()) {
-                PreparedStatement prepared = con.prepareStatement(REMOVE_CHEST);
+            try(Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(REMOVE_CHEST)) {
                 prepared.setString(1, world);
                 prepared.setInt(2, x);
                 prepared.setInt(3, y);
@@ -151,8 +143,7 @@ public class ChestTable
         
         Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
-            try (Connection con = databaseManager.getConnection()) {
-                PreparedStatement prepared = con.prepareStatement(CHUNK_QUERY);
+            try (Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(CHUNK_QUERY)) {
                 prepared.setString(1, stringWorld);
                 prepared.setInt(2, x);
                 prepared.setInt(3, z);
@@ -185,8 +176,7 @@ public class ChestTable
         String uuidString = uuid.toString();
         Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
-            try (Connection con = databaseManager.getConnection()) {
-                PreparedStatement prepared = con.prepareStatement(PLAYER_QUERY);
+            try (Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(PLAYER_QUERY)) {
                 prepared.setString(1, uuidString);
                  
                 MultipleQueryResult result = new MultipleQueryResult();
@@ -208,5 +198,21 @@ public class ChestTable
                 logger.log(Level.SEVERE, null, ex);
             } 
         });
+    }
+    
+    private final String COUNT_CHEST = "SELECT COUNT(*) AS total FROM chests WHERE owner = ?";
+    public int getPlayerChestNumber(final UUID uuid)
+    {
+        String uuidString = uuid.toString();
+        
+        try (Connection con = this.databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(COUNT_CHEST)) {
+            prepared.setString(1, uuidString);
+            
+            ResultSet set = prepared.executeQuery();
+            return set.next() ? set.getInt("total") : 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, null, ex);
+            return 0;
+        }
     }
 }

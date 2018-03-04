@@ -15,13 +15,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import me.parozzz.hopechest.PluginPermission;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
+import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
+import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
 /**
@@ -35,13 +39,15 @@ public class WorldManager
     private final DatabaseManager databaseManager;
     private final ChestRegistry chestRegistry;
     private final ChestFactory chestFactory;
+    private final HopeChestConfiguration config;
     private final World world;
     private final Map<Chunk, TypeContainer> chunkContainers;
-    public WorldManager(final ChestRegistry chestRegistry, final ChestFactory chestFactory, final DatabaseManager databaseManager, final World w)
+    public WorldManager(final ChestRegistry chestRegistry, final ChestFactory chestFactory, final DatabaseManager databaseManager, final HopeChestConfiguration config, final World w)
     {
         this.databaseManager = databaseManager;
         this.chestRegistry = chestRegistry;
         this.chestFactory = chestFactory;
+        this.config = config;
         this.world = w;
         
         chunkContainers = new HashMap<>();
@@ -52,27 +58,69 @@ public class WorldManager
         return world;
     }
     
-    protected final @Nullable AbstractChest addChest(final UUID owner, final ChestType chestType, final BlockState blockState, final Object... initialSubTypes)
+    protected final AddChestResult addChest(final UUID owner, final ChestType chestType, final BlockState blockState, final boolean bypassLimit, final Object... initialSubTypes)
     {
         if(chestType == null || chestType.getChestClass() == null || !InventoryHolder.class.isInstance(blockState))
         {
-            return null;
+            return new AddChestResult(Result.GENERIC_ERROR);
         }
         
         Location loc = blockState.getLocation();
         if(chestRegistry.hasPlacedChestAt(loc))
         {
             logger.log(Level.SEVERE, "Something wrong when adding chests. Duplicated Location?");
-            return null;
+            return new AddChestResult(Result.DUPLICATED_LOCATION);
+        }
+        
+        if(!bypassLimit && chestRegistry.getPlayerChestAmount(owner) >= config.getMaxPlayerChests())
+        {
+            Bukkit.getLogger().info("AMOUNT: " + chestRegistry.getPlayerChestAmount(owner));
+            return new AddChestResult(Result.MAX_REACHED);
         }
         
         AbstractChest chest = this.getChest(owner, chestType, loc);
+        if(chest == null)
+        {
+            return new AddChestResult(Result.GENERIC_ERROR);
+        }
+        
         Stream.of(initialSubTypes).forEach(chest::addRawSpecificType);
         
-        chestRegistry.addPlacedChest(chest);
+        chestRegistry.addPlacedChest(chest, false);
         chunkContainers.computeIfAbsent(loc.getChunk(), TypeContainer::new).addChest(chest);
         databaseManager.getChestTable().addChest(chest);
-        return chest;
+        return new AddChestResult(Result.SUCCESS, chest);
+    }
+    
+    public enum Result
+    {
+        SUCCESS, DUPLICATED_LOCATION, MAX_REACHED, GENERIC_ERROR;
+    }
+    
+    public class AddChestResult
+    {
+        private final Result resultEnum;
+        private AddChestResult(final Result resultEnum)
+        {
+            this.resultEnum = resultEnum;
+        }
+        
+        private AbstractChest chest;
+        private AddChestResult(final Result resultEnum, final AbstractChest chest)
+        {
+            this(resultEnum);
+            this.chest = chest;
+        }
+        
+        public Result getResult()
+        {
+            return resultEnum;
+        }
+        
+        public @Nullable AbstractChest getChest()
+        {
+            return chest;
+        }
     }
     
     private final Map<ChestType, Constructor<? extends AbstractChest>> cachedConstructor = new EnumMap(ChestType.class);
@@ -120,7 +168,7 @@ public class WorldManager
             return null;
         }
         
-        AbstractChest placedChest = chestRegistry.removePlacedChestAt(loc);
+        AbstractChest placedChest = chestRegistry.removePlacedChestAt(loc, false);
         if(placedChest == null)
         {
             return null;
@@ -152,7 +200,7 @@ public class WorldManager
         TypeContainer container = chunkContainers.remove(c);
         if(container != null)
         {
-            container.forEach(chestRegistry::removePlacedChest);
+            container.forEach(chest -> chestRegistry.removePlacedChest(chest, true));
         }
     }
 
@@ -170,7 +218,7 @@ public class WorldManager
                     AbstractChest chest = this.getChest(queryItem.getOwner(), type, queryItem.getLocation());
                     queryItem.subTypeStream().map(type::convertString).forEach(chest::addRawSpecificType);
 
-                    chestRegistry.addPlacedChest(chest);
+                    chestRegistry.addPlacedChest(chest, true);
                     typeContainer.addChest(chest);
                 });
             }

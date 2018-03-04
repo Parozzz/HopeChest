@@ -20,7 +20,8 @@ public enum PluginPermission
     COMMAND_RELOAD("hopechest.command.reload"),
     COMMAND_PLAYERCHEST("hopechest.command.playerchest"),
     INTERACT_BYPASSOWNER("hopechest.interact.bypassowner"),
-    INTERACT_USETOKEN("hopechest.interact.usetoken");
+    INTERACT_USETOKEN("hopechest.interact.usetoken"),
+    PLACEMENT_BYPASSLIMIT("hopechest.placement.bypasslimit");
         
     private final String perm;
     private PluginPermission(final String perm)

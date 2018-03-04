@@ -6,28 +6,34 @@
 package me.parozzz.hopechest.world;
 
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import me.parozzz.hopechest.PluginPermission;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.hopechest.chest.SubTypeTokenItem;
 import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.hopechest.configuration.chest.ChestConfig;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
+import me.parozzz.hopechest.database.DatabaseManager;
+import me.parozzz.hopechest.world.WorldManager.AddChestResult;
 import me.parozzz.reflex.NMS.itemStack.NMSStackCompound;
 import me.parozzz.reflex.NMS.nbt.NBTCompound;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
  *
  * @author Paros
  */
-public class ChestFactory 
+public class ChestFactory
 {
     private final WorldRegistry worldRegistry;
     private final HopeChestConfiguration config;
@@ -44,7 +50,7 @@ public class ChestFactory
      * @param owner The player who placed it
      * @return The new chest if all parameters are valid, null if the chest already exists.
      */
-    public @Nullable AbstractChest createNewChest(final ItemStack itemStack, final BlockState blockState, final Player owner)
+    public @Nullable AddChestResult createNewChest(final ItemStack itemStack, final BlockState blockState, final Player owner)
     {
         if(itemStack == null || blockState == null)
         {
@@ -54,7 +60,7 @@ public class ChestFactory
         NMSStackCompound stack = new NMSStackCompound(itemStack);
         if(!isChestItem(stack))
         {
-           return null; 
+            return null; 
         }
         
         NBTCompound mainCompound = stack.getCompound(CHEST_NBT);
@@ -70,7 +76,7 @@ public class ChestFactory
                 ? Stream.of(subTypeString.split(",")).map(chestType::convertString).toArray(Object[]::new)
                 : new Object[0];
 
-        return worldRegistry.getWorldManager(blockState.getWorld()).addChest(owner.getUniqueId(), chestType, blockState, subTypes);
+        return worldRegistry.getWorldManager(blockState.getWorld()).addChest(owner.getUniqueId(), chestType, blockState, PluginPermission.PLACEMENT_BYPASSLIMIT.hasPermission(owner), subTypes);
     }
     
     private static final String CHEST_NBT = "HopeChestNBT";

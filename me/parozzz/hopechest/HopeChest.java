@@ -56,9 +56,10 @@ public class HopeChest extends JavaPlugin
         DatabaseManager databaseManager = new DatabaseManager(this);
         worldRegistry = new WorldRegistry(this, databaseManager);
         
-        chestRegistry = new ChestRegistry();
+        chestRegistry = new ChestRegistry(databaseManager);
         chestFactory = new ChestFactory(worldRegistry, configuration);
         
+        Bukkit.getPluginManager().registerEvents(chestRegistry, this);
         Bukkit.getPluginManager().registerEvents(new ChestListener(chestFactory, chestRegistry, worldRegistry, configuration), this);
         Bukkit.getPluginManager().registerEvents(new MobListener(worldRegistry, configuration), this);
         Bukkit.getPluginManager().registerEvents(new CropListener(worldRegistry), this);

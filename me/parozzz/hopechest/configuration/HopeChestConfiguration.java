@@ -51,18 +51,25 @@ public final class HopeChestConfiguration
     
     private NMSStackCompound subTypeToken;
     private boolean ownerProtection;
+    private int maxPlayerChest;
     private void load()
     {
         FileConfiguration config = hopeChest.getConfig();
         languageManager.loadSection(config.getConfigurationSection("Language"));
         
         ownerProtection = config.getBoolean("ownerProtection");
+        maxPlayerChest = config.getInt("maxPlayerChest");
         
         guiConfig.load(config.getConfigurationSection("Gui"));
         chestConfigs.get(ChestType.MOB).load(config.getConfigurationSection("Mob"));
         chestConfigs.get(ChestType.CROP).load(config.getConfigurationSection("Crop"));
         
         subTypeToken = new NMSStackCompound(ItemUtil.getItemByPath(config.getConfigurationSection("TokenItem")));
+    }
+    
+    public int getMaxPlayerChests()
+    {
+        return maxPlayerChest;
     }
     
     public boolean hasOwnerProtection()

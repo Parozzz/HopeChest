@@ -8,9 +8,11 @@ package me.parozzz.hopechest.chest;
 import me.parozzz.hopechest.HopeChest;
 import me.parozzz.hopechest.PluginPermission;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
+import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.ChestRegistry;
 import me.parozzz.hopechest.world.WorldManager;
+import me.parozzz.hopechest.world.WorldManager.AddChestResult;
 import me.parozzz.hopechest.world.WorldRegistry;
 import me.parozzz.reflex.language.LanguageManager;
 import me.parozzz.reflex.utilities.ItemUtil;
@@ -26,6 +28,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -47,15 +50,30 @@ public class ChestListener implements Listener
         this.worldRegistry = worldRegistry;
         this.config = config;
     }
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private void onBlockPlace(final BlockPlaceEvent e)
     {
-        AbstractChest newChest = chestFactory.createNewChest(e.getItemInHand(), e.getBlockPlaced().getState(), e.getPlayer());
-        if(newChest != null)
+        AddChestResult result = chestFactory.createNewChest(e.getItemInHand(), e.getBlockPlaced().getState(), e.getPlayer());
+        if(result != null)
         {
             LanguageManager language = config.getLanguage();
-            language.getPlaceholder("chest_placed").parsePlaceholder("{chest}", language.getMessage(newChest.getType().getLanguageKey())).sendMessage(e.getPlayer());
+            switch(result.getResult())
+            {
+                case MAX_REACHED:
+                    e.setCancelled(true);
+                    language.sendMessage(e.getPlayer(), "max_chest_exceeded");
+                    break;
+                case SUCCESS:
+                    language.getPlaceholder("chest_placed")
+                            .parsePlaceholder("{chest}", language.getMessage(result.getChest().getType().getLanguageKey()))
+                            .sendMessage(e.getPlayer());
+                    break;
+                default:
+                    e.setCancelled(true);
+                    language.sendMessage(e.getPlayer(), "generic_error");
+                    break;
+            }
         }
     }
     

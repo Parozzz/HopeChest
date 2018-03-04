@@ -1,4 +1,5 @@
 ownerProtection: true
+maxPlayerChest: 3
 Gui:
   title: "&7&lHopeChest &0Assignment"
   MobHead:
@@ -136,6 +137,7 @@ Language: #Leave the message empty (Set it "") or remove it for not have the mes
   no_playerchest_found: "&2{player} &fhas not placed HopeChest."
   clickable_playerchest_message: "&fX:&l{x} &fY:&l{y} &fZ:&l{z} &fWorld:&l{world} &0(&7ClickMe!&0)"
   token_subtype_already_exist: "&cThat chest already have the subType of this token."
+  max_chest_exceeded: "&cYou have reached the limit of 4 &7HopeChest &cplaced."
   player_not_owner: "&cYou are not the owner of this {chest}&c."
   player_offline: "&2{player} &cis offline."
   no_permission: "&cYou don't have the permission to do that."
@@ -147,3 +149,4 @@ Language: #Leave the message empty (Set it "") or remove it for not have the mes
   chest_destroyed: "&cYou have destroyed a {chest}&f"
   cropchest: "&2Crop&7Chest"
   mobchest: "&bMob&7Chest"
+  generic_error: "&4Something went wrong. Contact an admin."
