@@ -6,6 +6,7 @@
 package me.parozzz.hopechest.chest;
 
 import me.parozzz.hopechest.HopeChest;
+import me.parozzz.hopechest.PluginPermission;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.ChestRegistry;
@@ -83,7 +84,7 @@ public class ChestListener implements Listener
             {
                 e.setCancelled(true);
                 
-                if(config.hasOwnerProtection() && !chest.isOwner(e.getPlayer()))
+                if(config.hasOwnerProtection() && !PluginPermission.INTERACT_BYPASSOWNER.hasPermission(e.getPlayer()) && !chest.isOwner(e.getPlayer()))
                 {
                     LanguageManager language = config.getLanguage();
                     language.getPlaceholder("player_not_owner").parsePlaceholder("{chest}", language.getMessage(chest.getType().getLanguageKey())).sendMessage(e.getPlayer());
@@ -91,7 +92,7 @@ public class ChestListener implements Listener
                 }
                 
                 SubTypeTokenItem tokenItem = SubTypeTokenItem.getTokenItem(e.getItem());
-                if(tokenItem == null)
+                if(tokenItem == null || !PluginPermission.INTERACT_USETOKEN.hasPermission(e.getPlayer()))
                 {
                     chest.getChestGui().open(e.getPlayer());
                     return;
