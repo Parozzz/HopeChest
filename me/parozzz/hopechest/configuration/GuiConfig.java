@@ -86,7 +86,6 @@ public final class GuiConfig implements IConfig
         ItemStack cachedItem = cachedHeads.computeIfAbsent(ct, type -> 
         {
             NMSStackCompound localMobHeadStack = mobHeadStack.clone();
-            HeadHunting.setStackCompoundData(localMobHeadStack, type);
             ChestGui.setStackData(localMobHeadStack, ChestType.MOB, type.name());
             
             ItemStack itemStack = localMobHeadStack.getItemStack();

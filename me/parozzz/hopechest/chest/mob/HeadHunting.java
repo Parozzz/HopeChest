@@ -15,6 +15,7 @@ import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
  */
 public class HeadHunting 
 {
+    
     public static void setStackCompoundData(final NMSStackCompound stack, final CreatureType ct)
     {
         NBTCompound compound = stack.getCompound("HopeChest");

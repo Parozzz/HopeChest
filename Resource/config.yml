@@ -1,3 +1,4 @@
+metrics: true
 ownerProtection: true
 maxPlayerChest: 3
 Gui:
@@ -35,6 +36,63 @@ TokenItem:
   lore:
     - "&7Shift + Right Click &fon a {chest}"
     - "&7To add {type} &7to it!"
+
+HeadHunting:
+  MobHead:
+    name: "{mob}&7's Head"
+    lore:
+      - "&fRight click to sell"
+      - "&7Sell for: {cost}" 
+  HeadValues:
+    bat: 1.0
+    blaze: 16.0
+    spider: 4.0
+    cave_spider: 4.5
+    chicken: 2.0
+    cow: 2.25
+    mushroom_cow: 2.5
+    creeper: 5.0
+    enderman: 7.0
+    endermite: 3.5
+    ghast: 8.0
+    guardian: 10.0
+    elder_guardian: 14.0
+    horse: 3.0
+    skeleton_horse: 3.25
+    zombie_horse: 3.5
+    mule: 3.0
+    donkey: 3.0
+    llama: 3.0
+    iron_golem: 16.0
+    snowman: 5.0
+    ocelot: 3.0
+    parrot: 1.5
+    pig: 2.0
+    polar_bear: 9.0
+    rabbit: 1.5
+    sheep: 2.0
+    shulker: 9.5
+    silverfish: 6.0
+    skeleton: 4.5
+    wither_skeleton: 6.0
+    stray: 6.0
+    slime: 0.75
+    magma_cube: 1.15
+    squid: 2.0
+    villager: 1.0
+    vindicator: 24.0
+    evoker: 24.0
+    illusioner: 24.0
+    vex: 5.0
+    witch: 8.0
+    wolf: 2.75
+    zombie: 4.0
+    zombie_villager: 4.5
+    pig_zombie: 7.0
+    giant: 50.0
+    husk: 6.0
+    wither: 300.0
+    ender_dragon: 2500.0
     
 Mob:
   ChestItem:
@@ -45,12 +103,11 @@ Mob:
       - "&fwill gather all drops from nearby &bmobs&f."
       - ""
       - "&7Shift + Right &fClick to configure."
-      
   itemBlacklist:
       - red_rose
       
   MobNames:
-    bat: "&fChicken"
+    bat: "&fBat"
     blaze: "&dBlaze"
     spider: "&aSpider"
     cave_spider: "&aCave Spider"
