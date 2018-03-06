@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
+import me.parozzz.hopechest.api.events.ItemListAddEvent;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
+import me.parozzz.reflex.utilities.Util;
 import org.bukkit.Chunk;
 import org.bukkit.inventory.ItemStack;
 
@@ -94,20 +96,24 @@ public class TypeContainer
             return;
         }
         
-        for(int x = 0; x < chestList.size(); x++)
+        
+        if(!Util.callEvent(new ItemListAddEvent(chestType, type, itemList)).isCancelled())
         {
-            AbstractChest chest = chestList.get(x);
-            if(!chest.canStoreItems(type))
+            for(int x = 0; x < chestList.size(); x++)
             {
-                continue;
-            }
-            
-            Collection<ItemStack> localRemainsColl = chest.getInventory().addItem(itemList.stream().toArray(ItemStack[]::new)).values();
-            itemList.clear();
-            itemList.addAll(localRemainsColl);
-            if(itemList.isEmpty())
-            {
-                return;
+                AbstractChest chest = chestList.get(x);
+                if(!chest.canStoreItems(type))
+                {
+                    continue;
+                }
+
+                Collection<ItemStack> localRemainsColl = chest.getInventory().addItem(itemList.stream().toArray(ItemStack[]::new)).values();
+                itemList.clear();
+                itemList.addAll(localRemainsColl);
+                if(itemList.isEmpty())
+                {
+                    return;
+                }
             }
         }
         

@@ -8,6 +8,7 @@ package me.parozzz.hopechest;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.parozzz.hopechest.Dependency.DependencyManager;
 import me.parozzz.hopechest.api.HopeChestAPI;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestListener;
@@ -17,17 +18,16 @@ import me.parozzz.hopechest.chest.crop.CropListener;
 import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.hopechest.chest.gui.ChestGui;
 import me.parozzz.hopechest.chest.gui.ChestGuiListener;
+import me.parozzz.hopechest.chest.mob.HeadHunting;
 import me.parozzz.hopechest.chest.mob.MobListener;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.utilities.PlayerUtil;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.WorldRegistry;
-import me.parozzz.reflex.utilities.EntityUtil;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,6 +49,8 @@ public class HopeChest extends JavaPlugin
     @Override
     public void onEnable()  
     {
+        DependencyManager.initialize();
+        
         configuration = new HopeChestConfiguration(this);
         ChestGui.setConfiguration(configuration);
         PlayerUtil.setConfig(configuration);
@@ -69,6 +71,11 @@ public class HopeChest extends JavaPlugin
         Bukkit.getPluginManager().registerEvents(new MobListener(worldRegistry, configuration), this);
         Bukkit.getPluginManager().registerEvents(new CropListener(worldRegistry), this);
         Bukkit.getPluginManager().registerEvents(new ChestGuiListener(chestFactory, configuration), this);
+        
+        if(DependencyManager.isVaultHooked() && configuration.getHeadHuntingConfig().isEnabled())
+        {
+            Bukkit.getPluginManager().registerEvents(new HeadHunting(configuration), this);
+        }
         
         CommandMap commandMap;
         try {

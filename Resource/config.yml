@@ -38,6 +38,7 @@ TokenItem:
     - "&7To add {type} &7to it!"
 
 HeadHunting:
+  enabled: true
   alwaysDrop: true #This will enable heads to be dropped also when a mob is normally killed.
   MobHead:
     name: "{mob}&7's Head"
@@ -200,6 +201,7 @@ Language: #Leave the message empty (Set it "") or remove it for not have the mes
   player_offline: "&2{player} &cis offline."
   no_permission: "&cYou don't have the permission to do that."
   no_such_chesttype: "&cA chest type named &4&l{name} &cdoes not exists."
+  heads_sold: "&fYou have sold x&l{amount}&f heads for &2&l{money}&f."
   item_sent: "&fYou sent {item} &fto &2{player}&f."
   item_received: "&fYou received {item}&f."
   inventory_full: "&fYour inventory was full. The received item is being dropped on the ground."

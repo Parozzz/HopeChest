@@ -46,6 +46,11 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <!--Vault Repository-->
+        <repository>
+	        <id>vault-repo</id>
+	        <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+        </repository>
     </repositories>
     
     <dependencies>
@@ -85,6 +90,13 @@
             <artifactId>StackMob</artifactId>
             <version>2.2.7</version>
             <scope>provided</scope>
+        </dependency>
+        <!--Vault-->
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <scope>provided</scope>
+            <version>1.6</version>
         </dependency>
     </dependencies>
     

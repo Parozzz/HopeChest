@@ -8,4 +8,4 @@ load: STARTUP
 main: me.parozzz.hopechest.HopeChest
 
 depend: [ReflexAPI]
-softdepend: [StackMob, Multiverse-Core]
+softdepend: [StackMob, Vault, Multiverse-Core]

@@ -35,12 +35,19 @@ public class HeadHuntingConfig implements IConfig
         this.mobConfig = mobConfig;
     }
 
+    private boolean enabled;
     private boolean alwaysDrop;
     private NMSStackCompound defaultHeadStack;
     private final Map<CreatureType, HeadInfo> headInfoMap = new EnumMap(CreatureType.class);
     @Override
     public void load(final ConfigurationSection path) 
     {
+        enabled = path.getBoolean("enabled");
+        if(!enabled)
+        {
+            return;
+        }
+        
         alwaysDrop = path.getBoolean("alwaysDrop");
         headInfoMap.values().forEach(info -> info.cachedHead = null);
         
@@ -60,6 +67,11 @@ public class HeadHuntingConfig implements IConfig
         });
         
         defaultHeadStack = new NMSStackCompound(ItemUtil.getItemByPath(Material.SKULL_ITEM, (short)3, path.getConfigurationSection("MobHead")));
+    }
+    
+    public boolean isEnabled()
+    {
+        return enabled;
     }
     
     public boolean doesAlwaysDrop()
