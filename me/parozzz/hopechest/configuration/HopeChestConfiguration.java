@@ -26,6 +26,7 @@ public final class HopeChestConfiguration
     private final HopeChest hopeChest;
     private final Map<ChestType, ChestConfig> chestConfigs;
     private final GuiConfig guiConfig;
+    private final HeadHuntingConfig headHunting;
     private final LanguageManager languageManager;
     public HopeChestConfiguration(final HopeChest hopeChest)
     {
@@ -34,10 +35,12 @@ public final class HopeChestConfiguration
         hopeChest.saveDefaultConfig();
         
         chestConfigs = new EnumMap(ChestType.class);
-        chestConfigs.put(ChestType.MOB, new MobConfig());
+        MobConfig mobConfig = new MobConfig();
+        chestConfigs.put(ChestType.MOB, mobConfig);
         chestConfigs.put(ChestType.CROP, new CropConfig());
         
         guiConfig = new GuiConfig(this);
+        headHunting = new HeadHuntingConfig(mobConfig);
         
         languageManager = new LanguageManager();
         load();
@@ -61,8 +64,10 @@ public final class HopeChestConfiguration
         maxPlayerChest = config.getInt("maxPlayerChest");
         
         guiConfig.load(config.getConfigurationSection("Gui"));
+        
         chestConfigs.get(ChestType.MOB).load(config.getConfigurationSection("Mob"));
         chestConfigs.get(ChestType.CROP).load(config.getConfigurationSection("Crop"));
+        headHunting.load(config.getConfigurationSection("HeadHunting")); //Reloading especially after MobConfig, since it does depend on it.
         
         subTypeToken = new NMSStackCompound(ItemUtil.getItemByPath(config.getConfigurationSection("TokenItem")));
     }
@@ -85,6 +90,11 @@ public final class HopeChestConfiguration
     public LanguageManager getLanguage()
     {
         return languageManager;
+    }
+    
+    public HeadHuntingConfig getHeadHuntingConfig()
+    {
+        return headHunting;
     }
     
     public GuiConfig getGuiConfig()

@@ -38,6 +38,7 @@ TokenItem:
     - "&7To add {type} &7to it!"
 
 HeadHunting:
+  alwaysDrop: true #This will enable heads to be dropped also when a mob is normally killed.
   MobHead:
     name: "{mob}&7's Head"
     lore:

@@ -6,16 +6,20 @@
 package me.parozzz.hopechest.configuration;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.parozzz.hopechest.chest.mob.HeadHunting;
+import me.parozzz.hopechest.configuration.chest.MobConfig;
 import me.parozzz.reflex.NMS.itemStack.NMSStackCompound;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import me.parozzz.reflex.utilities.ItemUtil;
+import me.parozzz.reflex.utilities.Util;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
@@ -25,17 +29,19 @@ public class HeadHuntingConfig implements IConfig
 {
     private static final Logger logger = Logger.getLogger(HeadHuntingConfig.class.getName());
     
-    private final HopeChestConfiguration config;
-    public HeadHuntingConfig(final HopeChestConfiguration config)
+    private final MobConfig mobConfig;
+    public HeadHuntingConfig(final MobConfig mobConfig)
     {
-        this.config = config;
+        this.mobConfig = mobConfig;
     }
 
+    private boolean alwaysDrop;
     private NMSStackCompound defaultHeadStack;
     private final Map<CreatureType, HeadInfo> headInfoMap = new EnumMap(CreatureType.class);
     @Override
     public void load(final ConfigurationSection path) 
     {
+        alwaysDrop = path.getBoolean("alwaysDrop");
         headInfoMap.values().forEach(info -> info.cachedHead = null);
         
         ConfigurationSection headValuePath = path.getConfigurationSection("HeadValues");
@@ -54,6 +60,11 @@ public class HeadHuntingConfig implements IConfig
         });
         
         defaultHeadStack = new NMSStackCompound(ItemUtil.getItemByPath(Material.SKULL_ITEM, (short)3, path.getConfigurationSection("MobHead")));
+    }
+    
+    public boolean doesAlwaysDrop()
+    {
+        return alwaysDrop;
     }
     
     public HeadInfo getHeadInfo(final CreatureType ct)
@@ -88,8 +99,13 @@ public class HeadHuntingConfig implements IConfig
                 NMSStackCompound stack = defaultHeadStack.clone();
                 HeadHunting.setStackCompoundData(stack, ct);
                 cachedHead = stack.getItemStack();
+                
+                ItemMeta meta = cachedHead.getItemMeta();
+                ItemUtil.parseMetaVariable(meta, "{cost}", String.format(Locale.ENGLISH, "%.00f", value));
+                ItemUtil.parseMetaVariable(meta, "{mob}", mobConfig.getMobName(ct));
+                cachedHead.setItemMeta(meta);
             }
-            return cachedHead;
+            return cachedHead.clone();
         }
     }
 }
