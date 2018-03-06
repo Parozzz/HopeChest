@@ -97,7 +97,7 @@ public class HeadHuntingConfig implements IConfig
             if(cachedHead == null)
             {
                 NMSStackCompound stack = defaultHeadStack.clone();
-                HeadHunting.setStackCompoundData(stack, ct);
+                HeadHunting.setStackCompoundData(stack, ct, value);
                 cachedHead = stack.getItemStack();
                 
                 ItemMeta meta = cachedHead.getItemMeta();

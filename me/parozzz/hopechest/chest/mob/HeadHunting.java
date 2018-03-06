@@ -15,11 +15,59 @@ import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
  */
 public class HeadHunting 
 {
-    
-    public static void setStackCompoundData(final NMSStackCompound stack, final CreatureType ct)
+    private final static String TAG = "HopeChest.HeadHunting";
+    public static void setStackCompoundData(final NMSStackCompound stack, final CreatureType ct, final double value)
     {
-        NBTCompound compound = stack.getCompound("HopeChest");
+        NBTCompound compound = stack.getCompound(TAG);
         compound.setString("Type", ct.name());
-        stack.setTag("HopeChest", compound);
+        compound.setDouble("Value", value);
+        stack.setTag(TAG, compound);
+    }
+    
+    public static boolean isValidHead(final NMSStackCompound stack)
+    {
+        return stack != null && stack.hasKey(TAG);
+    }
+    
+    public static HeadInfo getHeadInfo(final NMSStackCompound stack)
+    {
+        if(!isValidHead(stack))
+        {
+            return null;
+        }
+        
+        NBTCompound compound = stack.getCompound(TAG);
+        return new HeadInfo(CreatureType.valueOf(compound.getString("Type")), compound.getDouble("Value"));
+    }
+    
+    public static boolean sameType(final CreatureType ct, final NMSStackCompound stack)
+    {
+        if(!isValidHead(stack))
+        {
+            return false;
+        }
+        
+        return ct.name().equals(stack.getCompound(TAG).getString("Type"));
+    }
+    
+    public static class HeadInfo
+    {
+        private final CreatureType ct;
+        private final double value;
+        private HeadInfo(final CreatureType ct, final double value)
+        {
+            this.ct = ct;
+            this.value = value;
+        }
+        
+        public CreatureType getCreatureType()
+        {
+            return ct;
+        }
+        
+        public double getValue()
+        {
+            return value;
+        }
     }
 }
