@@ -7,6 +7,7 @@ package me.parozzz.hopechest.chest.mob;
 
 import java.util.Iterator;
 import me.parozzz.hopechest.chest.ChestType;
+import me.parozzz.hopechest.configuration.HeadHuntingConfig;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.configuration.chest.MobConfig;
 import me.parozzz.hopechest.world.TypeContainer;
@@ -41,6 +42,14 @@ public class MobListener implements Listener
         {
             Location loc = e.getEntity().getLocation();
             
+            CreatureType creatureType = CreatureType.getByLivingEntity(e.getEntity());
+            
+            HeadHuntingConfig headHunting = config.getHeadHuntingConfig();
+            if(headHunting.doesAlwaysDrop())
+            {
+                e.getDrops().add(headHunting.getHeadInfo(creatureType).getHead());
+            }
+            
             TypeContainer typeContainer = worldRegistry.getWorldManager(loc.getWorld()).getByChunk(loc.getChunk());
             if(typeContainer != null)
             {
@@ -55,8 +64,15 @@ public class MobListener implements Listener
                     }
                 }
                 
-                CreatureType creatureType = CreatureType.getByLivingEntity(e.getEntity());
+                ItemStack head = null;
+                if(!headHunting.doesAlwaysDrop())
+                {
+                    head = headHunting.getHeadInfo(creatureType).getHead();
+                    e.getDrops().add(head);
+                }
+                
                 typeContainer.addMobItemStacks(e.getDrops(), creatureType);
+                e.getDrops().remove(head); //Remove the head. If is null, nothing will be done.
             }
         }
     }
