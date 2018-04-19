@@ -71,7 +71,7 @@ public class ChestRegistry implements Listener
         
         if(!chunkUnload)
         {
-            Optional.ofNullable(chest).map(AbstractChest::getOwner).ifPresent(owner -> playerCounter.compute(owner.getUniqueId(), (uuid, amount) -> amount - 1));
+            Optional.ofNullable(chest).map(AbstractChest::getOwner).ifPresent(owner -> playerCounter.compute(owner, (uuid, amount) -> amount - 1));
         }
         return chest;
     }
@@ -82,7 +82,7 @@ public class ChestRegistry implements Listener
         
         if(!chunkLoad)
         {
-            playerCounter.compute(chest.getOwner().getUniqueId(), (uuid, amount) -> amount == null ? 1 : amount + 1);
+            playerCounter.compute(chest.getOwner(), (uuid, amount) -> amount == null ? 1 : amount + 1);
         }
     }
     

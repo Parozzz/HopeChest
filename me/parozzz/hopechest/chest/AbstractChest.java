@@ -35,14 +35,14 @@ public abstract class AbstractChest<T>
     
     private final WorldManager worldManager;
     private final DatabaseManager databaseManager;
-    private final OfflinePlayer owner;
+    private final UUID owner;
     private final Location location;
     public <H extends BlockState & InventoryHolder> AbstractChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
     {
         this.worldManager = worldManager;
         this.databaseManager = databaseManager;
         
-        this.owner = Bukkit.getOfflinePlayer(owner);
+        this.owner = owner;
         
         this.location = loc;
     }
@@ -62,7 +62,7 @@ public abstract class AbstractChest<T>
         return location;
     }
     
-    public final OfflinePlayer getOwner()
+    public final UUID getOwner()
     {
         return owner;
     }
