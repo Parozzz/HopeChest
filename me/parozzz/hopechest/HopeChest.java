@@ -8,11 +8,13 @@ package me.parozzz.hopechest;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.parozzz.hopechest.Dependency.DependencyManager;
+import me.parozzz.hopechest.dependency.DependencyManager;
 import me.parozzz.hopechest.api.HopeChestAPI;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestListener;
 import me.parozzz.hopechest.chest.SubTypeTokenItem;
+import me.parozzz.hopechest.chest.autosell.AutoSellGui;
+import me.parozzz.hopechest.chest.autosell.AutoSellRunnable;
 import me.parozzz.hopechest.world.ChestRegistry;
 import me.parozzz.hopechest.chest.crop.CropListener;
 import me.parozzz.hopechest.chest.crop.CropType;
@@ -49,12 +51,13 @@ public class HopeChest extends JavaPlugin
     @Override
     public void onEnable()  
     {
-        DependencyManager.initialize();
+        DependencyManager.initialize(this);
         
         configuration = new HopeChestConfiguration(this);
         ChestGui.setConfiguration(configuration);
+        AutoSellGui.setConfiguration(configuration);
         PlayerUtil.setConfig(configuration);
-        
+                 
         if(this.getConfig().getBoolean("metrics", true))
         {
             new MetricsLite(this);
@@ -89,6 +92,8 @@ public class HopeChest extends JavaPlugin
         }
         
         commandMap.register("hopechest", new HChestCommand(configuration, chestFactory, databaseManager));
+        
+        AutoSellRunnable.setInstance(this);
     }
     
     public HopeChestConfiguration getConfiguration()

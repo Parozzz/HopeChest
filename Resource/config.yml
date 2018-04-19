@@ -37,6 +37,9 @@ TokenItem:
     - "&7Shift + Right Click &fon a {chest}"
     - "&7To add {type} &7to it!"
 
+AutoSell:
+  
+
 HeadHunting:
   enabled: true
   alwaysDrop: true #This will enable heads to be dropped also when a mob is normally killed.

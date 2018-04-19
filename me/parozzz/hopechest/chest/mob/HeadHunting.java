@@ -7,7 +7,7 @@ package me.parozzz.hopechest.chest.mob;
 
 import java.util.Map;
 import java.util.Objects;
-import me.parozzz.hopechest.Dependency.DependencyManager;
+import me.parozzz.hopechest.dependency.DependencyManager;
 import me.parozzz.hopechest.configuration.HeadHuntingConfig;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.world.WorldRegistry;

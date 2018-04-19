@@ -1,0 +1,4 @@
+useEssentialWorth: false
+
+ItemWorth:
+  rotten_flesh>0:

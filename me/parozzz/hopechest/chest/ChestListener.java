@@ -5,10 +5,8 @@
  */
 package me.parozzz.hopechest.chest;
 
-import me.parozzz.hopechest.HopeChest;
 import me.parozzz.hopechest.PluginPermission;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
-import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.ChestRegistry;
 import me.parozzz.hopechest.world.WorldManager;
@@ -16,7 +14,6 @@ import me.parozzz.hopechest.world.WorldManager.AddChestResult;
 import me.parozzz.hopechest.world.WorldRegistry;
 import me.parozzz.reflex.language.LanguageManager;
 import me.parozzz.reflex.utilities.ItemUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,7 +25,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -95,45 +91,63 @@ public class ChestListener implements Listener
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private void onChestInteract(final PlayerInteractEvent e)
     {
-        if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().isSneaking())
+        if(e.getClickedBlock() == null || e.getAction() == Action.PHYSICAL)
         {
-            AbstractChest chest = chestRegistry.getPlacedChest(e.getClickedBlock().getLocation());
-            if(chest != null)
+            return;
+        }
+        
+        AbstractChest chest = chestRegistry.getPlacedChest(e.getClickedBlock().getLocation());
+        if(chest != null)
+        {
+            //Owner protection. If the player is not the same (Without the bypass permission) won't be able to do anything, even open the chest.
+            if(config.hasOwnerProtection() && !PluginPermission.INTERACT_BYPASSOWNER.hasPermission(e.getPlayer()) && !chest.isOwner(e.getPlayer()))
             {
                 e.setCancelled(true);
                 
-                if(config.hasOwnerProtection() && !PluginPermission.INTERACT_BYPASSOWNER.hasPermission(e.getPlayer()) && !chest.isOwner(e.getPlayer()))
-                {
-                    LanguageManager language = config.getLanguage();
-                    language.getPlaceholder("player_not_owner").parsePlaceholder("{chest}", language.getMessage(chest.getType().getLanguageKey())).sendMessage(e.getPlayer());
-                    return;
-                }
-                
-                SubTypeTokenItem tokenItem = SubTypeTokenItem.getTokenItem(e.getItem());
-                if(tokenItem == null || !PluginPermission.INTERACT_USETOKEN.hasPermission(e.getPlayer()))
-                {
-                    chest.getChestGui().open(e.getPlayer());
-                    return;
-                }
-                
-                ChestType chestType = tokenItem.getChestType();
-                if(chestType != chest.getType())
-                {
-                    LanguageManager language = this.config.getLanguage();
-                    language.getPlaceholder("wrong_token_type").parsePlaceholder("{chest}", language.getMessage(chestType.getLanguageKey())).sendMessage(e.getPlayer());
-                    return;
-                }
-                
-                if(!chest.addSpecificType(tokenItem.getSubType()))
-                {
-                    config.getLanguage().sendMessage(e.getPlayer(), "token_subtype_already_exist");
-                    return;
-                }
-                
-                if(e.getPlayer().getGameMode() != GameMode.CREATIVE)
-                {
-                    ItemUtil.decreaseItemStack(e.getItem(), e.getPlayer(), e.getPlayer().getInventory());
-                }
+                LanguageManager language = config.getLanguage();
+                language.getPlaceholder("player_not_owner").parsePlaceholder("{chest}", language.getMessage(chest.getType().getLanguageKey())).sendMessage(e.getPlayer());
+                return;
+            }
+            
+            //The player must be sneaking for opening the gui or using the token.
+            if(!e.getPlayer().isSneaking())
+            {
+                return;
+            }
+            
+            e.setCancelled(true);
+            
+            switch(e.getAction())
+            {
+                case LEFT_CLICK_BLOCK:
+                    break;
+                case RIGHT_CLICK_BLOCK:
+                    SubTypeTokenItem tokenItem = SubTypeTokenItem.getTokenItem(e.getItem());
+                    if(tokenItem == null || !PluginPermission.INTERACT_USETOKEN.hasPermission(e.getPlayer())) //Check if the player has a token and if he has the permission to use it.
+                    {
+                        chest.getChestGui().open(e.getPlayer());
+                        return;
+                    }
+
+                    ChestType chestType = tokenItem.getChestType();
+                    if(chestType != chest.getType()) //Check if the chestType is the same of the token used.
+                    {
+                        LanguageManager language = this.config.getLanguage();
+                        language.getPlaceholder("wrong_token_type").parsePlaceholder("{chest}", language.getMessage(chestType.getLanguageKey())).sendMessage(e.getPlayer());
+                        return;
+                    }
+
+                    if(!chest.addSpecificType(tokenItem.getSubType())) //Adding the subType to the chest and check if already exists.
+                    {
+                        config.getLanguage().sendMessage(e.getPlayer(), "token_subtype_already_exist");
+                        return;
+                    }
+                    //Decrease the ItemStack in the player inventory
+                    if(e.getPlayer().getGameMode() != GameMode.CREATIVE)
+                    {
+                        ItemUtil.decreaseItemStack(e.getItem(), e.getPlayer(), e.getPlayer().getInventory());
+                    }
+                    break;
             }
         }
     }

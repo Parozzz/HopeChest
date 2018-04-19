@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
+import me.parozzz.hopechest.chest.autosell.AutoSellRunnable;
+import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.configuration.GuiConfig;
 import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.WorldManager;
@@ -22,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Paros
  */
-public class CropChest extends AbstractChest<CropType>
+public class CropChest extends AbstractChest<CropType> implements IAutoSeller
 {
     private final Set<CropType> types;
     public CropChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
@@ -87,6 +89,12 @@ public class CropChest extends AbstractChest<CropType>
     public Stream<ItemStack> getGuiItems(GuiConfig guiConfig) 
     {
         return types.stream().map(guiConfig::getCropItem);
+    }
+
+    @Override
+    public void doAutoSell() 
+    {
+        
     }
 
 }

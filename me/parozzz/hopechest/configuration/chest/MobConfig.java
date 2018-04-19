@@ -6,15 +6,12 @@
 package me.parozzz.hopechest.configuration.chest;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.parozzz.hopechest.configuration.chest.ChestConfig;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.reflex.language.LanguageManager;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 

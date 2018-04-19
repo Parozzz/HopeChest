@@ -23,6 +23,7 @@ import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
@@ -216,8 +217,8 @@ public class WorldManager
                     ChestType type = queryItem.getType();
 
                     AbstractChest chest = this.getChest(queryItem.getOwner(), type, queryItem.getLocation());
-                    queryItem.subTypeStream().map(type::convertString).forEach(chest::addRawSpecificType);
-
+                    queryItem.subTypeStream().filter(StringUtils::isNotBlank).map(type::convertString).forEach(chest::addRawSpecificType);
+                    
                     chestRegistry.addPlacedChest(chest, true);
                     typeContainer.addChest(chest);
                 });

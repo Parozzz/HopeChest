@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import me.parozzz.hopechest.chest.AbstractChest;
+import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.configuration.GuiConfig;
 import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.WorldManager;
@@ -23,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Paros
  */
-public class MobChest extends AbstractChest<CreatureType>
+public class MobChest extends AbstractChest<CreatureType> implements IAutoSeller
 {
     private final Set<CreatureType> types;
     
@@ -89,5 +90,11 @@ public class MobChest extends AbstractChest<CreatureType>
     public Stream<ItemStack> getGuiItems(final GuiConfig guiConfig) 
     {
         return types.stream().map(guiConfig::getMobHead);
+    }
+
+    @Override
+    public void doAutoSell() 
+    {
+        
     }
 }
