@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,16 +14,23 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class AutoSellGuiConfig implements IConfig
 {
-    public AutoSellGuiConfig()
+    private final HopeChestConfiguration configuration;
+    public AutoSellGuiConfig(final HopeChestConfiguration configuration)
     {
-        
+        this.configuration = configuration;
     }
     
     
     @Override
     public void load(ConfigurationSection path) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      	String title = Util.cc(path.getString("title"));
+        int sellDelay = path.getInt("sellDelay");
+      
+      	ConfigurationSection guiPath = path.getConfigurationSection("gui");
+      
+        NMSStackCompound onStack = new NMSStackCompound(ItemUtil.getItemByPath(guiPath.getConfigurationSection("onItem"));
+        NMSStackCompound offStack = new NMSStackCompound(ItemUtil.getItemByPath(guiPath.getConfigurationSection("offItem"));
     }
     
 }
