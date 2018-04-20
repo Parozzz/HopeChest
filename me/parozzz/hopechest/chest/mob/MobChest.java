@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import me.parozzz.hopechest.chest.AbstractChest;
+import me.parozzz.hopechest.chest.autosell.AutoSellRunnable;
 import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.configuration.GuiConfig;
 import me.parozzz.hopechest.database.DatabaseManager;
@@ -96,5 +97,13 @@ public class MobChest extends AbstractChest<CreatureType> implements IAutoSeller
     public void doAutoSell() 
     {
         
+    }
+  
+    @Override
+    public void setAutoSell(final boolean active)
+    {
+        IAutoSeller.super.setRawAutoSell(active);
+        
+        super.getDatabaseManager().getChestTable().updateAutoSell(this);
     }
 }

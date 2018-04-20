@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import me.parozzz.hopechest.PluginPermission;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,7 +25,6 @@ import me.parozzz.hopechest.database.DatabaseManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
 /**

@@ -11,7 +11,9 @@ package me.parozzz.hopechest.chest.autosell;
  */
 public interface IAutoSeller 
 {
-    public default void setAutoSell(final boolean active)
+    public void setAutoSell(final boolean active);
+    
+    public default void setRawAutoSell(final boolean active)
     {
         if(active)
         {
@@ -24,4 +26,9 @@ public interface IAutoSeller
     }
     
     public void doAutoSell();
+    
+    public default boolean isAutoSellEnabled()
+    {
+        return AutoSellRunnable.getInstance().contains(this);
+    }
 }

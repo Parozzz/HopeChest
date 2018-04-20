@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
+import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.database.query.IQueryResult;
 import me.parozzz.hopechest.database.query.QueryItem;
 import me.parozzz.hopechest.database.query.MultipleQueryResult;
@@ -42,12 +43,15 @@ public class ChestTable
         
         try (Connection con = databaseManager.getConnection()) {
             con.createStatement().execute("CREATE TABLE IF NOT EXISTS chests (world TEXT, x INTEGER, y INTEGER, z INTEGER, chunkX INTEGER, chunkZ INTEGER, type TEXT, subTypes TEXT, owner TEXT);");
+            
+            //Added after the autoSell function has been added.
+            con.createStatement().execute("ALTER TABLE chests ADD autoSell BIT");
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
     }
     
-    private final String ADD_CHEST = "INSERT INTO chests (world, x, y, z, chunkX, chunkZ, type, subTypes, owner) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private final String ADD_CHEST = "INSERT INTO chests (world, x, y, z, chunkX, chunkZ, type, subTypes, owner, autoSell) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     public void addChest(final AbstractChest chest)
     {
         Location loc = chest.getLocation();
@@ -60,10 +64,12 @@ public class ChestTable
         String type = chest.getType().name();
         String subTypes = ((Stream<String>)chest.getSpecificTypes().stream().map(Objects::toString)).collect(Collectors.joining(","));
         String owner = chest.getOwner().toString();
-        
+        boolean autoSell = chest instanceof IAutoSeller ? ((IAutoSeller)chest).isAutoSellEnabled() : false;
+                
         Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
         {
-            try(Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(ADD_CHEST)) {
+            try(Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(ADD_CHEST)) 
+            {
                 prepared.setString(1, world);
                 prepared.setInt(2, x);
                 prepared.setInt(3, y);
@@ -73,6 +79,8 @@ public class ChestTable
                 prepared.setString(7, type);
                 prepared.setString(8, subTypes);
                 prepared.setString(9, owner);
+                prepared.setBoolean(10, autoSell);
+                
                 prepared.executeUpdate();
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, null, ex);
@@ -99,6 +107,36 @@ public class ChestTable
                 prepared.setInt(3, x);
                 prepared.setInt(4, y);
                 prepared.setInt(5, z);
+                prepared.executeUpdate();
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+    
+    private final String UPDATE_AUTOSELL = "UPDATE chests SET autoSell = ? WHERE world = ? AND x  = ? AND y  = ? AND z  = ?;";
+    public <T extends AbstractChest & IAutoSeller> void updateAutoSell(final T autoSeller)
+    {
+        Location loc = autoSeller.getLocation();
+        
+        String world = loc.getWorld().getName();
+        int x = loc.getBlockX();
+        int y = loc.getBlockY();
+        int z = loc.getBlockZ();
+        
+        boolean autoSell = autoSeller.isAutoSellEnabled();
+        
+        Bukkit.getScheduler().runTaskAsynchronously(databaseManager.getPlugin(), () -> 
+        {
+            try(Connection con = databaseManager.getConnection(); PreparedStatement prepared = con.prepareStatement(UPDATE_AUTOSELL)) 
+            {
+                prepared.setBoolean(1, autoSell);
+                
+                prepared.setString(2, world);
+                prepared.setInt(3, x);
+                prepared.setInt(4, y);
+                prepared.setInt(5, z);
+                
                 prepared.executeUpdate();
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, null, ex);
@@ -159,8 +197,9 @@ public class ChestTable
                     ChestType chestType = ChestType.valueOf(set.getString("type"));
                     String subTypes = set.getString("subTypes");
                     UUID uuid = UUID.fromString(set.getString("owner"));
-                    
-                    result.addItem(new QueryItem(qx, qy, qz, chestType, subTypes, uuid));
+                    boolean autoSell = set.getBoolean("autoSell");
+                            
+                    result.addItem(new QueryItem(qx, qy, qz, chestType, subTypes, uuid, autoSell));
                 }
                 
                 Bukkit.getScheduler().runTask(databaseManager.getPlugin(), () -> consumer.accept(result));
@@ -189,8 +228,9 @@ public class ChestTable
                     int qz = set.getInt("z");
                     ChestType chestType = ChestType.valueOf(set.getString("type"));
                     String subTypes = set.getString("subTypes");
+                    boolean autoSell = set.getBoolean("autoSell");
                     
-                    result.addItem(set.getString("world"), new QueryItem(qx, qy, qz, chestType, subTypes, uuid));
+                    result.addItem(set.getString("world"), new QueryItem(qx, qy, qz, chestType, subTypes, uuid, autoSell));
                 }
                 
                 Bukkit.getScheduler().runTask(databaseManager.getPlugin(), () -> consumer.accept(result));
