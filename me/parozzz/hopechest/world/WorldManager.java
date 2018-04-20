@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
+import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
 import org.apache.commons.lang.StringUtils;
@@ -216,6 +217,11 @@ public class WorldManager
 
                     AbstractChest chest = this.getChest(queryItem.getOwner(), type, queryItem.getLocation());
                     queryItem.subTypeStream().filter(StringUtils::isNotBlank).map(type::convertString).forEach(chest::addRawSpecificType);
+                    
+                    if(chest instanceof IAutoSeller)
+                    {
+                        ((IAutoSeller)chest).setRawAutoSell(queryItem.isAutoSellEnabled());
+                    }
                     
                     chestRegistry.addPlacedChest(chest, true);
                     typeContainer.addChest(chest);
