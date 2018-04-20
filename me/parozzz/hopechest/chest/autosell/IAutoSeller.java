@@ -25,10 +25,12 @@ public interface IAutoSeller
         }
     }
     
-    public void doAutoSell();
-    
     public default boolean isAutoSellEnabled()
     {
         return AutoSellRunnable.getInstance().contains(this);
     }
+    
+    public void doAutoSell();
+    public AutoSellGui getAutoSellGui();
+    public void resetAutoSellGuiInstance();
 }

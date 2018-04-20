@@ -7,7 +7,12 @@ package me.parozzz.hopechest.chest.autosell;
 
 import me.parozzz.hopechest.dependency.DependencyManager;
 import me.parozzz.hopechest.chest.AbstractChest;
+import me.parozzz.hopechest.configuration.AutoSellConfig;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 /**
  *
@@ -15,15 +20,44 @@ import me.parozzz.hopechest.configuration.HopeChestConfiguration;
  */
 public class AutoSellGui
 {
-    private static HopeChestConfiguration config;
-    public static void setConfiguration(final HopeChestConfiguration configParam)
+    private static AutoSellConfig config;
+    public static void setConfiguration(final HopeChestConfiguration configuration)
     {
-        config = configParam;
+        config = configuration.getAutoSellConfig();
     }
     
-    private final AbstractChest chest;
-    public AutoSellGui(final AbstractChest chest)
+    
+    
+    private final IAutoSeller autoSeller;
+    private final Inventory inventory;
+    public AutoSellGui(final IAutoSeller autoSeller)
     {
-        this.chest = chest;
+        this.autoSeller = autoSeller;
+        
+        inventory = Bukkit.createInventory(new AutoSellHolder(), 9, config.getGuiConfig().getTitle());
+    }
+    
+    public IAutoSeller getAutoSeller()
+    {
+        return autoSeller;
+    }
+    
+    public void open(final HumanEntity he)
+    {
+        he.openInventory(inventory);
+    }
+    
+    public class AutoSellHolder implements InventoryHolder
+    {
+        public AutoSellGui getGui()
+        {
+            return AutoSellGui.this;
+        }
+        
+        @Override
+        public Inventory getInventory() 
+        {
+            return inventory;
+        }
     }
 }

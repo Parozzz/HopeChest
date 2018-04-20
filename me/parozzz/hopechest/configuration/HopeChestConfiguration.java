@@ -24,10 +24,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 public final class HopeChestConfiguration 
 {
     private final HopeChest hopeChest;
-    private final Map<ChestType, ChestConfig> chestConfigs;
+    
     private final GuiConfig guiConfig;
     private final HeadHuntingConfig headHunting;
+    private final AutoSellConfig autoSell;
     private final LanguageManager languageManager;
+    
+    private final Map<ChestType, ChestConfig> chestConfigs;
+    
     public HopeChestConfiguration(final HopeChest hopeChest)
     {
         this.hopeChest = hopeChest;
@@ -41,6 +45,7 @@ public final class HopeChestConfiguration
         
         guiConfig = new GuiConfig(this);
         headHunting = new HeadHuntingConfig(mobConfig);
+        autoSell = new AutoSellConfig();
         
         languageManager = new LanguageManager();
         load();
@@ -68,6 +73,7 @@ public final class HopeChestConfiguration
         chestConfigs.get(ChestType.MOB).load(config.getConfigurationSection("Mob"));
         chestConfigs.get(ChestType.CROP).load(config.getConfigurationSection("Crop"));
         headHunting.load(config.getConfigurationSection("HeadHunting")); //Reloading especially after MobConfig, since it does depend on it.
+        autoSell.load(config.getConfigurationSection("AutoSell"));
         
         subTypeToken = new NMSStackCompound(ItemUtil.getItemByPath(config.getConfigurationSection("TokenItem")));
     }
@@ -95,6 +101,11 @@ public final class HopeChestConfiguration
     public HeadHuntingConfig getHeadHuntingConfig()
     {
         return headHunting;
+    }
+    
+    public AutoSellConfig getAutoSellConfig()
+    {
+        return autoSell;
     }
     
     public GuiConfig getGuiConfig()

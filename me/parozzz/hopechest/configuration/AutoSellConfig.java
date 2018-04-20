@@ -14,7 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class AutoSellConfig implements IConfig
 {
     private final AutoSellGuiConfig guiConfig;
-    public AutoSellConfig(final HopeChestConfiguration configuration)
+    protected AutoSellConfig()
     {
         this.guiConfig = new AutoSellGuiConfig();
     }
