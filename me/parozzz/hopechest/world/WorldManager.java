@@ -74,7 +74,6 @@ public class WorldManager
         
         if(!bypassLimit && chestRegistry.getPlayerChestAmount(owner) >= config.getMaxPlayerChests())
         {
-            Bukkit.getLogger().info("AMOUNT: " + chestRegistry.getPlayerChestAmount(owner));
             return new AddChestResult(Result.MAX_REACHED);
         }
         
@@ -130,10 +129,10 @@ public class WorldManager
             Constructor<? extends AbstractChest> cons = cachedConstructor.get(chestType);
             if(cons == null)
             {
-                cons = chestType.getChestClass().getConstructor(UUID.class, WorldManager.class, Location.class, DatabaseManager.class);
+                cons = chestType.getChestClass().getConstructor(UUID.class, WorldManager.class, Location.class, HopeChestConfiguration.class, DatabaseManager.class);
                 cachedConstructor.put(chestType, cons);
             }
-            return cons.newInstance(owner, this, loc, databaseManager);
+            return cons.newInstance(owner, this, loc, config, databaseManager);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             logger.log(Level.SEVERE, null, ex);
             return null;

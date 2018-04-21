@@ -13,11 +13,10 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import me.parozzz.hopechest.chest.gui.ChestGui;
 import me.parozzz.hopechest.configuration.GuiConfig;
+import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.WorldManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -34,12 +33,17 @@ public abstract class AbstractChest<T>
     private final static Logger logger = Logger.getLogger(AbstractChest.class.getName());
     
     private final WorldManager worldManager;
+    private final HopeChestConfiguration configuration;
     private final DatabaseManager databaseManager;
+    
     private final UUID owner;
     private final Location location;
-    public <H extends BlockState & InventoryHolder> AbstractChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
+    
+    public <H extends BlockState & InventoryHolder> AbstractChest(final UUID owner, final WorldManager worldManager, final Location loc,
+            final HopeChestConfiguration configuration, final DatabaseManager databaseManager)
     {
         this.worldManager = worldManager;
+        this.configuration = configuration;
         this.databaseManager = databaseManager;
         
         this.owner = owner;
@@ -55,6 +59,11 @@ public abstract class AbstractChest<T>
     protected DatabaseManager getDatabaseManager()
     {
         return databaseManager;
+    }
+    
+    protected HopeChestConfiguration getConfiguration()
+    {
+        return configuration;
     }
     
     public final Location getLocation()

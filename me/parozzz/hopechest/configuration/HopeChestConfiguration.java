@@ -27,7 +27,6 @@ public final class HopeChestConfiguration
     
     private final GuiConfig guiConfig;
     private final HeadHuntingConfig headHunting;
-    private final AutoSellConfig autoSell;
     private final LanguageManager languageManager;
     
     private final Map<ChestType, ChestConfig> chestConfigs;
@@ -45,7 +44,6 @@ public final class HopeChestConfiguration
         
         guiConfig = new GuiConfig(this);
         headHunting = new HeadHuntingConfig(mobConfig);
-        autoSell = new AutoSellConfig();
         
         languageManager = new LanguageManager();
         load();
@@ -60,6 +58,8 @@ public final class HopeChestConfiguration
     private NMSStackCompound subTypeToken;
     private boolean ownerProtection;
     private int maxPlayerChest;
+    private int autoSellDelaySeconds;
+    
     private void load()
     {
         FileConfiguration config = hopeChest.getConfig();
@@ -67,13 +67,13 @@ public final class HopeChestConfiguration
         
         ownerProtection = config.getBoolean("ownerProtection");
         maxPlayerChest = config.getInt("maxPlayerChest");
+        autoSellDelaySeconds = config.getInt("autoSellDelay");
         
         guiConfig.load(config.getConfigurationSection("Gui"));
         
         chestConfigs.get(ChestType.MOB).load(config.getConfigurationSection("Mob"));
         chestConfigs.get(ChestType.CROP).load(config.getConfigurationSection("Crop"));
         headHunting.load(config.getConfigurationSection("HeadHunting")); //Reloading especially after MobConfig, since it does depend on it.
-        autoSell.load(config.getConfigurationSection("AutoSell"));
         
         subTypeToken = new NMSStackCompound(ItemUtil.getItemByPath(config.getConfigurationSection("TokenItem")));
     }
@@ -81,6 +81,11 @@ public final class HopeChestConfiguration
     public int getMaxPlayerChests()
     {
         return maxPlayerChest;
+    }
+    
+    public int getAutoSellDelay()
+    {
+        return autoSellDelaySeconds;
     }
     
     public boolean hasOwnerProtection()
@@ -102,12 +107,7 @@ public final class HopeChestConfiguration
     {
         return headHunting;
     }
-    
-    public AutoSellConfig getAutoSellConfig()
-    {
-        return autoSell;
-    }
-    
+
     public GuiConfig getGuiConfig()
     {
         return guiConfig;

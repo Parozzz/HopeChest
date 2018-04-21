@@ -6,6 +6,7 @@
 package me.parozzz.hopechest.chest;
 
 import me.parozzz.hopechest.PluginPermission;
+import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.world.ChestFactory;
 import me.parozzz.hopechest.world.ChestRegistry;
@@ -120,6 +121,14 @@ public class ChestListener implements Listener
             switch(e.getAction())
             {
                 case LEFT_CLICK_BLOCK:
+                    if(chest instanceof IAutoSeller)
+                    {
+                        IAutoSeller autoSeller = (IAutoSeller)chest;
+                        
+                        boolean isEnabled = autoSeller.isAutoSellEnabled();     
+                        autoSeller.setAutoSell(!isEnabled);
+                        config.getLanguage().sendMessage(e.getPlayer(), isEnabled ? "autosell_disabled" : "autosell_enabled");
+                    }
                     break;
                 case RIGHT_CLICK_BLOCK:
                     SubTypeTokenItem tokenItem = SubTypeTokenItem.getTokenItem(e.getItem());

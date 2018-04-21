@@ -67,7 +67,7 @@ public class AutoSellRunnable extends SplittedRunnable<IAutoSeller>
         return autoSellChests;
     }
 
-    private final Consumer<IAutoSeller> consumer = IAutoSeller::doAutoSell;
+    private final Consumer<IAutoSeller> consumer = IAutoSeller::tickAutoSell;
     @Override
     public Consumer<IAutoSeller> getConsumer() 
     {

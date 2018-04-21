@@ -16,17 +16,12 @@ import me.parozzz.hopechest.chest.SubTypeTokenItem;
 import me.parozzz.hopechest.chest.crop.CropType;
 import me.parozzz.hopechest.configuration.chest.ChestConfig;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
-import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.WorldManager.AddChestResult;
 import me.parozzz.reflex.NMS.itemStack.NMSStackCompound;
 import me.parozzz.reflex.NMS.nbt.NBTCompound;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**

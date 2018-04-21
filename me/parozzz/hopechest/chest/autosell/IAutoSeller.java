@@ -30,7 +30,7 @@ public interface IAutoSeller
         return AutoSellRunnable.getInstance().contains(this);
     }
     
-    public void doAutoSell();
-    public AutoSellGui getAutoSellGui();
-    public void resetAutoSellGuiInstance();
+    public void tickAutoSell();
+    public int getRemainingSeconds();
+    public void resetSellTimer();
 }
