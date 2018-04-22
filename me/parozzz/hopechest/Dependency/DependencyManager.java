@@ -46,7 +46,7 @@ public class DependencyManager
                         BigDecimal bigDecimal = essentials.getWorth().getPrice(item);
                         if(bigDecimal == null)
                         {
-                            return 0D;
+                            return -1D;
                         }
                         
                         return bigDecimal.doubleValue();

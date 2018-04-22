@@ -16,7 +16,9 @@ import me.parozzz.hopechest.configuration.GuiConfig;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -36,7 +38,7 @@ public abstract class AbstractChest<T>
     private final HopeChestConfiguration configuration;
     private final DatabaseManager databaseManager;
     
-    private final UUID owner;
+    private final OfflinePlayer owner;
     private final Location location;
     
     public <H extends BlockState & InventoryHolder> AbstractChest(final UUID owner, final WorldManager worldManager, final Location loc,
@@ -46,7 +48,7 @@ public abstract class AbstractChest<T>
         this.configuration = configuration;
         this.databaseManager = databaseManager;
         
-        this.owner = owner;
+        this.owner = Bukkit.getOfflinePlayer(owner);
         
         this.location = loc;
     }
@@ -72,6 +74,11 @@ public abstract class AbstractChest<T>
     }
     
     public final UUID getOwner()
+    {
+        return owner.getUniqueId();
+    }
+    
+    public final OfflinePlayer getOfflinePlayerOwner()
     {
         return owner;
     }
