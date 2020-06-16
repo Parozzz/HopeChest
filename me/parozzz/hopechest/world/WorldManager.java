@@ -15,18 +15,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import me.parozzz.hopechest.PluginPermission;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import me.parozzz.hopechest.chest.AbstractChest;
 import me.parozzz.hopechest.chest.ChestType;
+import me.parozzz.hopechest.chest.autosell.IAutoSeller;
 import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
 /**
@@ -75,7 +74,6 @@ public class WorldManager
         
         if(!bypassLimit && chestRegistry.getPlayerChestAmount(owner) >= config.getMaxPlayerChests())
         {
-            Bukkit.getLogger().info("AMOUNT: " + chestRegistry.getPlayerChestAmount(owner));
             return new AddChestResult(Result.MAX_REACHED);
         }
         
@@ -131,10 +129,10 @@ public class WorldManager
             Constructor<? extends AbstractChest> cons = cachedConstructor.get(chestType);
             if(cons == null)
             {
-                cons = chestType.getChestClass().getConstructor(UUID.class, WorldManager.class, Location.class, DatabaseManager.class);
+                cons = chestType.getChestClass().getConstructor(UUID.class, WorldManager.class, Location.class, HopeChestConfiguration.class, DatabaseManager.class);
                 cachedConstructor.put(chestType, cons);
             }
-            return cons.newInstance(owner, this, loc, databaseManager);
+            return cons.newInstance(owner, this, loc, config, databaseManager);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             logger.log(Level.SEVERE, null, ex);
             return null;
@@ -218,6 +216,11 @@ public class WorldManager
 
                     AbstractChest chest = this.getChest(queryItem.getOwner(), type, queryItem.getLocation());
                     queryItem.subTypeStream().filter(StringUtils::isNotBlank).map(type::convertString).forEach(chest::addRawSpecificType);
+                    
+                    if(chest instanceof IAutoSeller)
+                    {
+                        ((IAutoSeller)chest).setRawAutoSell(queryItem.isAutoSellEnabled());
+                    }
                     
                     chestRegistry.addPlacedChest(chest, true);
                     typeContainer.addChest(chest);

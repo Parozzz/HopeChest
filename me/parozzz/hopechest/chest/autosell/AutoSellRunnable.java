@@ -56,13 +56,18 @@ public class AutoSellRunnable extends SplittedRunnable<IAutoSeller>
         autoSellChests.remove(autoSeller);
     }
     
+    public boolean contains(final IAutoSeller autoSeller)
+    {
+        return autoSellChests.contains(autoSeller);
+    }
+    
     @Override
     public Collection<IAutoSeller> getCollection() 
     {
         return autoSellChests;
     }
 
-    private final Consumer<IAutoSeller> consumer = IAutoSeller::doAutoSell;
+    private final Consumer<IAutoSeller> consumer = IAutoSeller::tickAutoSell;
     @Override
     public Consumer<IAutoSeller> getConsumer() 
     {

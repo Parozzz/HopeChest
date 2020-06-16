@@ -23,7 +23,8 @@ public class QueryItem
     private final ChestType chestType;
     private final String subTypes;
     private final UUID owner;
-    public QueryItem(final int x, final int y, final int z, final ChestType chestType, final String subTypes, final UUID owner)
+    private final boolean autoSell;
+    public QueryItem(final int x, final int y, final int z, final ChestType chestType, final String subTypes, final UUID owner, final boolean autoSell)
     {
         this.x = x;
         this.y = y;
@@ -32,6 +33,8 @@ public class QueryItem
         this.chestType = chestType;
         this.subTypes = subTypes;
         this.owner = owner;
+        
+        this.autoSell = autoSell;
     }
 
     private World world;
@@ -58,5 +61,10 @@ public class QueryItem
     public Stream<String> subTypeStream()
     {
         return Stream.of(subTypes.split(","));
+    }
+    
+    public boolean isAutoSellEnabled()
+    {
+        return autoSell;
     }
 }

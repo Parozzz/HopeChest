@@ -24,10 +24,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 public final class HopeChestConfiguration 
 {
     private final HopeChest hopeChest;
-    private final Map<ChestType, ChestConfig> chestConfigs;
+    
     private final GuiConfig guiConfig;
     private final HeadHuntingConfig headHunting;
     private final LanguageManager languageManager;
+    
+    private final Map<ChestType, ChestConfig> chestConfigs;
+    
     public HopeChestConfiguration(final HopeChest hopeChest)
     {
         this.hopeChest = hopeChest;
@@ -55,6 +58,8 @@ public final class HopeChestConfiguration
     private NMSStackCompound subTypeToken;
     private boolean ownerProtection;
     private int maxPlayerChest;
+    private int autoSellDelaySeconds;
+    
     private void load()
     {
         FileConfiguration config = hopeChest.getConfig();
@@ -62,6 +67,7 @@ public final class HopeChestConfiguration
         
         ownerProtection = config.getBoolean("ownerProtection");
         maxPlayerChest = config.getInt("maxPlayerChest");
+        autoSellDelaySeconds = config.getInt("autoSellDelay");
         
         guiConfig.load(config.getConfigurationSection("Gui"));
         
@@ -75,6 +81,11 @@ public final class HopeChestConfiguration
     public int getMaxPlayerChests()
     {
         return maxPlayerChest;
+    }
+    
+    public int getAutoSellDelay()
+    {
+        return autoSellDelaySeconds;
     }
     
     public boolean hasOwnerProtection()
@@ -96,7 +107,7 @@ public final class HopeChestConfiguration
     {
         return headHunting;
     }
-    
+
     public GuiConfig getGuiConfig()
     {
         return guiConfig;

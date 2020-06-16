@@ -13,6 +13,11 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface IWorth 
 {
+    /**
+     * Get the cost of the itemStack
+     * @param item The itemStack to get the cost of
+     * @return The cost value or -1 if the item is not sellable.
+     */
     public double getCost(final ItemStack item);
     
 }

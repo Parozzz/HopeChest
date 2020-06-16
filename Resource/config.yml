@@ -38,8 +38,18 @@ TokenItem:
     - "&7To add {type} &7to it!"
 
 AutoSell:
-  
-
+  sellDelay: 30 #Chests sell delay in seconds.
+  Gui:
+    title: "AutoSell Gui: {sell_time}"
+    onItem:
+      id: wool
+      data: 13
+      name: "&7AutoSell Mode: &2ON"
+    offItem:
+      id: wool
+      data: 7
+      name: "&7AutoSell Mode: &cOFF"
+      
 HeadHunting:
   enabled: true
   alwaysDrop: true #This will enable heads to be dropped also when a mob is normally killed.

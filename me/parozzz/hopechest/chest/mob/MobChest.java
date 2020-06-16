@@ -12,9 +12,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import me.parozzz.hopechest.chest.ChestType;
 import me.parozzz.reflex.utilities.EntityUtil.CreatureType;
-import me.parozzz.hopechest.chest.AbstractChest;
-import me.parozzz.hopechest.chest.autosell.IAutoSeller;
+import me.parozzz.hopechest.chest.AutoSellerChestAbstract;
 import me.parozzz.hopechest.configuration.GuiConfig;
+import me.parozzz.hopechest.configuration.HopeChestConfiguration;
 import me.parozzz.hopechest.database.DatabaseManager;
 import me.parozzz.hopechest.world.WorldManager;
 import org.bukkit.Location;
@@ -24,13 +24,14 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Paros
  */
-public class MobChest extends AbstractChest<CreatureType> implements IAutoSeller
+public class MobChest extends AutoSellerChestAbstract<CreatureType>
 {
     private final Set<CreatureType> types;
     
-    public MobChest(final UUID owner, final WorldManager worldManager, final Location loc, final DatabaseManager databaseManager)
+    public MobChest(final UUID owner, final WorldManager worldManager, final Location loc,
+            final HopeChestConfiguration configuration, final DatabaseManager databaseManager)
     {
-        super(owner, worldManager, loc, databaseManager);
+        super(owner, worldManager, loc, configuration, databaseManager);
         types = EnumSet.noneOf(CreatureType.class);
     }
     
@@ -90,11 +91,5 @@ public class MobChest extends AbstractChest<CreatureType> implements IAutoSeller
     public Stream<ItemStack> getGuiItems(final GuiConfig guiConfig) 
     {
         return types.stream().map(guiConfig::getMobHead);
-    }
-
-    @Override
-    public void doAutoSell() 
-    {
-        
     }
 }

@@ -29,14 +29,20 @@ public class DatabaseManager implements IDatabase
     {
         this.plugin = plugin;
         
+        /*
         HikariConfig config = new HikariConfig();
         config.setConnectionTestQuery("SELECT 1;");
         config.setPoolName("HopeChestSQlitePool");
         config.setDriverClassName("org.sqlite.JDBC");
         config.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "database.db");
-        config.setMaximumPoolSize(20);
+        config.setMaximumPoolSize(20);*/
         
-        source = new HikariDataSource(config);
+        source = new HikariDataSource();
+        source.setConnectionTestQuery("SELECT 1;");
+        source.setPoolName("HopeChestSQlitePool");
+        source.setDriverClassName("org.sqlite.JDBC");
+        source.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "database.db");
+        source.setMaximumPoolSize(20);
         
         chestTable = new ChestTable(this);
         playerTable = new PlayerTable(this, plugin);
